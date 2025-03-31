@@ -9,4 +9,4 @@
 #define WS2812_RST_NUM 50   // 官方复位时间为50us（40个周期），保险起见使用50个周期
  
 void WS2812_Init(void);
-void WS2812_Set(uint16_t num,uint8_t R,uint8_t G,uint8_t B);
+//void WS2812_Set(uint16_t num,uint8_t R,uint8_t G,uint8_t B);

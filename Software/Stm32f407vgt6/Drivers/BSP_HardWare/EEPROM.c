@@ -358,6 +358,5 @@ storFloatData E2P_ReadFloatNum( uint16_t addr )
 //EEPROM读出所有参数
 void E2P_Read_allParam(void)
 {
-
-		
+	;
 }

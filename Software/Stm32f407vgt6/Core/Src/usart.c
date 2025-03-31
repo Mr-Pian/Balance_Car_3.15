@@ -56,7 +56,7 @@ void uart_printf(UART_HandleTypeDef *huart,const char *format, ...)
     va_end(args);
 		if(length>APP_TX_DATA_SIZE)
 			length = APP_TX_DATA_SIZE;
-    HAL_UART_Transmit_DMA(huart,UserTxBufferFS, length);   //只需要更改这儿就能一直到其他平台
+    HAL_UART_Transmit_DMA(huart,UserTxBufferFS, length);   //只需要更改这儿就能移植到其他平台
 
 }
 

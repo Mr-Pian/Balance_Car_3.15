@@ -57,6 +57,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define PWMA_Pin GPIO_PIN_0
+#define PWMA_GPIO_Port GPIOA
+#define AIN2_Pin GPIO_PIN_1
+#define AIN2_GPIO_Port GPIOA
+#define AIN1_Pin GPIO_PIN_2
+#define AIN1_GPIO_Port GPIOA
+#define BIN1_Pin GPIO_PIN_7
+#define BIN1_GPIO_Port GPIOE
+#define BIN2_Pin GPIO_PIN_8
+#define BIN2_GPIO_Port GPIOE
+#define PWMB_Pin GPIO_PIN_9
+#define PWMB_GPIO_Port GPIOE
 #define LCD_CS_Pin GPIO_PIN_15
 #define LCD_CS_GPIO_Port GPIOA
 #define LCD_DC_Pin GPIO_PIN_11
@@ -65,6 +77,8 @@ void Error_Handler(void);
 #define LCD_RST_GPIO_Port GPIOD
 #define LCD_BLK_Pin GPIO_PIN_5
 #define LCD_BLK_GPIO_Port GPIOB
+#define BUZZ_Pin GPIO_PIN_8
+#define BUZZ_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

@@ -9,6 +9,8 @@
 "ds_blancedcar_f407\usart.o"
 "ds_blancedcar_f407\stm32f4xx_it.o"
 "ds_blancedcar_f407\stm32f4xx_hal_msp.o"
+"ds_blancedcar_f407\control.o"
+"ds_blancedcar_f407\pid.o"
 "ds_blancedcar_f407\stm32f4xx_hal_i2c.o"
 "ds_blancedcar_f407\stm32f4xx_hal_i2c_ex.o"
 "ds_blancedcar_f407\stm32f4xx_hal_rcc.o"
@@ -33,6 +35,8 @@
 "ds_blancedcar_f407\ws2812.o"
 "ds_blancedcar_f407\lcd_st7789s.o"
 "ds_blancedcar_f407\eeprom.o"
+"ds_blancedcar_f407\music.o"
+"ds_blancedcar_f407\tb6612.o"
 --library_type=microlib --strict --scatter "ds_BlancedCar_F407\ds_BlancedCar_F407.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

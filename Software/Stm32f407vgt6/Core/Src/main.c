@@ -28,6 +28,10 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "LCD_ST7789S.h"
+#include "Music.h"
+#include "tb6612.h"
+#include "control.h"
+#include "pid.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -86,7 +90,6 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-	delay_init(168);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -96,20 +99,47 @@ int main(void)
   MX_TIM1_Init();
   MX_SPI3_Init();
   MX_I2C3_Init();
+  MX_TIM4_Init();
+  MX_TIM5_Init();
+  MX_TIM14_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-	HAL_GPIO_WritePin(LCD_BLK_GPIO_Port,LCD_BLK_Pin,1);
-	TFTSPI_Init();
+	delay_init(168);
+	//BSP_Hardware Init
+	
+	TFTSPI_Init();  //屏幕初始化lcd
+	
+//	Play_Music(&Open);  //开机音效
+	
+//	delay_ms(1000);
+
+	pid_init(&pid_speed);
+	//pid_speed.f_param_init()
+	
+	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
+	HAL_TIM_Base_Start_IT(&htim3);
+  HAL_TIM_Base_Start_IT(&htim4);
+  HAL_TIM_Base_Start_IT(&htim14);
+
+	
+//	Motor_SetSpeed(Foward, 50, R);
+//	Motor_SetSpeed(Foward, 50, L);
+//	
+//	Motor_Start(Both);
+
+//	HAL_TIM_Base_Start(&htim4);
+//	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+  
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
+	
+	while (1)
   {
-		TFT_Printf(10,10,COLOR_WHITE,COLOR_BLACK,fsize_16X32,"asdjashjfh");
-		delay_ms(1000);
-		printf("1234\n");
-		
-		uart_printf(&huart1,"dma 1234\n");
+		TFT_Printf(0,0,COLOR_BLACK, COLOR_RED, fsize_12X24, "%f", the_car.L_Real_Speed);
+		TFT_Printf(0,24,COLOR_BLACK, COLOR_RED, fsize_12X24, "%f", the_car.R_Real_Speed);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
