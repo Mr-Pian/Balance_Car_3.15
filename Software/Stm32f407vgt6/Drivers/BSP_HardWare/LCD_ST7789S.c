@@ -132,7 +132,7 @@ void TFTSPI_Init(void) {
 	TFTSPI_Write_Cmd(0x21);              //颜色反转
 	TFTSPI_Write_Cmd(0x29);              //开启屏幕显示
 
-	TFTSPI_CLS(COLOR_RED);//初始为全黑
+	TFTSPI_CLS(COLOR_WHITE);//初始为全黑
 }
 
 /*!

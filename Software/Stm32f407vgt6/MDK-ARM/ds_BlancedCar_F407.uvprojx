@@ -82,7 +82,7 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
-            <UserProg1Name>\Balance_Car_3.15\Software\Stm32f407vgt6\MDK-ARM\Keil5_disp_size_bar_v0.4.exe</UserProg1Name>
+            <UserProg1Name>D:\Project\stm32_series\Team_Train\Balance_Car_3.15\Software\Stm32f407vgt6\MDK-ARM\Keil5_disp_size_bar_v0.4.exe</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>

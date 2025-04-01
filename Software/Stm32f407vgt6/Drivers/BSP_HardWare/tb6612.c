@@ -16,14 +16,14 @@ int Motor_SetSpeed(int speed, uint8_t L_R)
 	{
 		if (speed >= 0)  //Õý×ª
 		{
-			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_SET);
-			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_SET);
 			__HAL_TIM_SET_COMPARE(&htim5,TIM_CHANNEL_1,speed);
 		}
 		else
 		{
-			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_SET);
+			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_SET);
+			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_RESET);
 			__HAL_TIM_SET_COMPARE(&htim5,TIM_CHANNEL_1,-speed);
 		}
 		

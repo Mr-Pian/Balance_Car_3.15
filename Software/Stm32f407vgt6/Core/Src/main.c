@@ -125,9 +125,9 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim4);
   HAL_TIM_Base_Start_IT(&htim14);
 
-	Motor_Start(Both);
-	the_car.L_Motor_Status = M_On;
-	the_car.R_Motor_Status = M_On;
+//	Motor_Start(Both);
+//	the_car.L_Motor_Status = M_On;
+//	the_car.R_Motor_Status = M_On;
 //	Motor_SetSpeed(Foward, 50, R);
 //	Motor_SetSpeed(Foward, 50, L);
 //	
@@ -143,8 +143,10 @@ int main(void)
 	
 	while (1)
   {
-		TFT_Printf(0,0,COLOR_BLACK, COLOR_RED, fsize_12X24, "L: %f ", the_car.Sensor_val->L_Speed);
-		TFT_Printf(0,24,COLOR_BLACK, COLOR_RED, fsize_12X24, "R: %f ", the_car.Sensor_val->R_Speed);
+		TFT_Printf(0,0,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "LSPEED: %f ", the_car.Sensor_val->L_Speed);
+		TFT_Printf(0,24,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "RSPEED: %f ", the_car.Sensor_val->R_Speed);
+		TFT_Printf(0,48,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "LOUT: %f ", the_car.Pid_speed_L->output);
+		TFT_Printf(0,64,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "ROUT: %f ", the_car.Pid_speed_R->output);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
