@@ -1,5 +1,7 @@
 --cpu=Cortex-M4.fp.sp
 "ds_blancedcar_f407\startup_stm32f407xx.o"
+"ds_blancedcar_f407\control.o"
+"ds_blancedcar_f407\pid.o"
 "ds_blancedcar_f407\main.o"
 "ds_blancedcar_f407\gpio.o"
 "ds_blancedcar_f407\dma.o"
@@ -9,8 +11,6 @@
 "ds_blancedcar_f407\usart.o"
 "ds_blancedcar_f407\stm32f4xx_it.o"
 "ds_blancedcar_f407\stm32f4xx_hal_msp.o"
-"ds_blancedcar_f407\control.o"
-"ds_blancedcar_f407\pid.o"
 "ds_blancedcar_f407\stm32f4xx_hal_i2c.o"
 "ds_blancedcar_f407\stm32f4xx_hal_i2c_ex.o"
 "ds_blancedcar_f407\stm32f4xx_hal_rcc.o"

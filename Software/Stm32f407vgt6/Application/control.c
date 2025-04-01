@@ -42,20 +42,20 @@ void Get_Motor_Speed(car_typedef* hcar)
 	//判断方向后加上符号
 	if (__HAL_TIM_GET_COUNTER(&htim3) > 32768)
 	{
-		hcar->Sensor_val->L_Speed = (angle_a*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
+		hcar->Sensor_val->R_Speed = (angle_a*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
 	}
 	else
 	{
-		hcar->Sensor_val->L_Speed = -(angle_a*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
+		hcar->Sensor_val->R_Speed = -(angle_a*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
 	}
 	
 	if (__HAL_TIM_GET_COUNTER(&htim4) > 32768)
 	{
-		hcar->Sensor_val->R_Speed = -(angle_b*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
+		hcar->Sensor_val->L_Speed = -(angle_b*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
 	}
 	else
 	{
-		hcar->Sensor_val->R_Speed = (angle_b*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
+		hcar->Sensor_val->L_Speed = (angle_b*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
 	}
 	
 	//计数器清零

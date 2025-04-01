@@ -7,7 +7,7 @@
 
 #define WHEEL_SIZE 0.067  //轮子直径，单位是m
 #define PI 3.14159 
-#define GET_MOTOR_SPEED_FRE 1000  //编码器采样频率，单位是hz
+#define GET_MOTOR_SPEED_FRE 500  //编码器采样频率，单位是hz
 #define MAX_SPEED 50
 
 typedef enum

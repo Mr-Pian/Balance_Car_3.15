@@ -16,14 +16,14 @@ int Motor_SetSpeed(int speed, uint8_t L_R)
 	{
 		if (speed >= 0)  //Õý×ª
 		{
-			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_SET);
+			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_SET);
+			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_RESET);
 			__HAL_TIM_SET_COMPARE(&htim5,TIM_CHANNEL_1,speed);
 		}
 		else
 		{
-			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_SET);
-			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_SET);
 			__HAL_TIM_SET_COMPARE(&htim5,TIM_CHANNEL_1,-speed);
 		}
 		
@@ -33,16 +33,17 @@ int Motor_SetSpeed(int speed, uint8_t L_R)
 	{
 		if (speed >= 0)
 		{
-			HAL_GPIO_WritePin(BIN1_GPIO_Port,BIN1_Pin,GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(BIN2_GPIO_Port,BIN2_Pin,GPIO_PIN_SET);
+			HAL_GPIO_WritePin(BIN1_GPIO_Port,BIN1_Pin,GPIO_PIN_SET);
+			HAL_GPIO_WritePin(BIN2_GPIO_Port,BIN2_Pin,GPIO_PIN_RESET);
 			__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,speed);
 		}
 		else
 		{
-			HAL_GPIO_WritePin(BIN1_GPIO_Port,BIN1_Pin,GPIO_PIN_SET);
-			HAL_GPIO_WritePin(BIN2_GPIO_Port,BIN2_Pin,GPIO_PIN_RESET);	
+			HAL_GPIO_WritePin(BIN1_GPIO_Port,BIN1_Pin,GPIO_PIN_RESET);
+			HAL_GPIO_WritePin(BIN2_GPIO_Port,BIN2_Pin,GPIO_PIN_SET);
+			__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,-speed);
 		}
-		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,-speed);
+		
 	}
 	
 	return 0;
