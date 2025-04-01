@@ -113,8 +113,11 @@ int main(void)
 	
 //	delay_ms(1000);
 
-	pid_init(&pid_speed);
-	//pid_speed.f_param_init()
+	pid_init(&pid_speed_L);
+	pid_speed_L.f_param_init(&pid_speed_L,PID_Speed,50,50,0,1,0.1,4.0f,0.0f,0.0f);
+	pid_init(&pid_speed_R);
+	pid_speed_R.f_param_init(&pid_speed_R,PID_Speed,50,50,0,1,0.1,4.0f,0.0f,0.0f);
+	Control_Init(&the_car);
 	
 	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
@@ -122,7 +125,9 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim4);
   HAL_TIM_Base_Start_IT(&htim14);
 
-	
+	Motor_Start(Both);
+	the_car.L_Motor_Status = M_On;
+	the_car.R_Motor_Status = M_On;
 //	Motor_SetSpeed(Foward, 50, R);
 //	Motor_SetSpeed(Foward, 50, L);
 //	
@@ -138,8 +143,8 @@ int main(void)
 	
 	while (1)
   {
-		TFT_Printf(0,0,COLOR_BLACK, COLOR_RED, fsize_12X24, "%f", the_car.L_Real_Speed);
-		TFT_Printf(0,24,COLOR_BLACK, COLOR_RED, fsize_12X24, "%f", the_car.R_Real_Speed);
+		TFT_Printf(0,0,COLOR_BLACK, COLOR_RED, fsize_12X24, "L: %f ", the_car.Sensor_val->L_Speed);
+		TFT_Printf(0,24,COLOR_BLACK, COLOR_RED, fsize_12X24, "R: %f ", the_car.Sensor_val->R_Speed);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

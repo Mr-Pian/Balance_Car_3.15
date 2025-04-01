@@ -137,7 +137,7 @@ extern int status;
 #if SOFTWARE_PWM
 void Software_Pwm(float tone, float Beat)
 {
-	int times = (int)((Beat/(tone/2.0))*1000.0);
+	int times = (int)((Beat/(tone/2.0f))*1000.0f);
 	while (times--)
 	{
 		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_8);

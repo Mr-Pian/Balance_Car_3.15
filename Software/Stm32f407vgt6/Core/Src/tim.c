@@ -31,6 +31,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if (htim == &htim14)  //1000hzÊ±»ù
 	{
 		Get_Motor_Speed(&the_car);
+		Speed_CLoop_PID_Control(&the_car);
 	}
 }
 

@@ -38,3 +38,4 @@ ds_blancedcar_f407\tim.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart
 ds_blancedcar_f407\tim.o: ../Drivers/SYSTEM/delay/delay.h
 ds_blancedcar_f407\tim.o: ../Drivers/CMSIS/Include/core_cm4.h
 ds_blancedcar_f407\tim.o: ..\Application\control.h
+ds_blancedcar_f407\tim.o: ..\Application\pid.h

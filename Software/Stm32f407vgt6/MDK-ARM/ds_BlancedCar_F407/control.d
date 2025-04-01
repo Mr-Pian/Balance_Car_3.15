@@ -1,6 +1,5 @@
 ds_blancedcar_f407\control.o: ..\Application\control.c
 ds_blancedcar_f407\control.o: ..\Application\control.h
-ds_blancedcar_f407\control.o: ../Core/Inc/tim.h
 ds_blancedcar_f407\control.o: ../Core/Inc/main.h
 ds_blancedcar_f407\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 ds_blancedcar_f407\control.o: ../Core/Inc/stm32f4xx_hal_conf.h
@@ -38,3 +37,12 @@ ds_blancedcar_f407\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_
 ds_blancedcar_f407\control.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
 ds_blancedcar_f407\control.o: ../Drivers/SYSTEM/delay/delay.h
 ds_blancedcar_f407\control.o: ../Drivers/CMSIS/Include/core_cm4.h
+ds_blancedcar_f407\control.o: ..\Application\pid.h
+ds_blancedcar_f407\control.o: ../Core/Inc/tim.h
+ds_blancedcar_f407\control.o: ../Drivers/BSP_HardWare/tb6612.h
+ds_blancedcar_f407\control.o: ../Core/Inc/usart.h
+ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
+ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h

@@ -10,36 +10,41 @@
 
 //speed 的范围是0-100
 
-int Motor_SetSpeed(int Mode,int speed, uint8_t L_R)
+int Motor_SetSpeed(int speed, uint8_t L_R)
 { 
 	if (L_R == 1)  //右边转
 	{
-		if (Mode == 1)
+		if (speed >= 0)  //正转
+		{
+			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_SET);
+			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_RESET);
+			__HAL_TIM_SET_COMPARE(&htim5,TIM_CHANNEL_1,speed);
+		}
+		else
 		{
 			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_SET);
+			__HAL_TIM_SET_COMPARE(&htim5,TIM_CHANNEL_1,-speed);
 		}
-		if (Mode == 0)
-		{
-			HAL_GPIO_WritePin(AIN1_GPIO_Port,AIN1_Pin,GPIO_PIN_SET);
-			HAL_GPIO_WritePin(AIN2_GPIO_Port,AIN2_Pin,GPIO_PIN_RESET);	
-		}
-		__HAL_TIM_SET_COMPARE(&htim5,TIM_CHANNEL_1,speed);
+		
 	}
+	
 	if (L_R == 0)  //左边转
 	{
-		if (Mode == 1)
+		if (speed >= 0)
 		{
 			HAL_GPIO_WritePin(BIN1_GPIO_Port,BIN1_Pin,GPIO_PIN_RESET);
 			HAL_GPIO_WritePin(BIN2_GPIO_Port,BIN2_Pin,GPIO_PIN_SET);
+			__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,speed);
 		}
-		if (Mode == 0)
+		else
 		{
 			HAL_GPIO_WritePin(BIN1_GPIO_Port,BIN1_Pin,GPIO_PIN_SET);
 			HAL_GPIO_WritePin(BIN2_GPIO_Port,BIN2_Pin,GPIO_PIN_RESET);	
 		}
-		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,speed);
+		__HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,-speed);
 	}
+	
 	return 0;
 }
 
@@ -104,79 +109,4 @@ int Motor_Off(uint8_t L_R)
 		return 1;
 	}
 }
-
-///************************************************************************************************************
-//** long Get_Speed(uint8_t L_R)                  				                                                   **                                                              
-//** 功能描述：获取一侧电机速度                                                                        		     **
-//** 参数说明：左右电机                          					                                                   **   
-//** 参数返回：long                                                                                           **
-//************************************************************************************************************/
-//long Get_Speed(uint8_t L_R)
-//{
-//	if(L_R==L) return dif_l;
-//	else return dif_r;
-//}
-
-///************************************************************************************************************
-//** void Motor_RealSpeed(uint8_t L_R)                  				                                             **                                                              
-//** 功能描述：PID保持稳定速度                                                                     		         **
-//** 参数说明：左右电机，速度                          					                                               **   
-//** 参数返回：				                                                                                       **
-//************************************************************************************************************/
-//uint8_t buffer[4]={0};
-//void Motor_RealSpeed(int speed,uint8_t L_R)
-//{
-//	int PID_FINAL=PID_Loc_V(speed,Get_Speed(L_R)*10,L_R?(&PID_VR):(&PID_VL),2999999);
-//	if(PID_FINAL>1000)	PID_FINAL=1000;
-//	if(PID_FINAL<-1000)	PID_FINAL=-1000;
-//	if(PID_FINAL>0)
-//	{
-//		Motor_SetSpeed(Foward, (PID_FINAL), L_R);
-//	}
-//	else
-//	{
-//		Motor_SetSpeed(Backward, -(PID_FINAL), L_R);
-//	}
-
-//}
-///************************************************************************************************************
-//** void Motor_KeepAngle(int angle,int speed);                				                                       **                                                              
-//** 功能描述：PID保持稳定角度前进                                                                 		         **
-//** 参数说明：初始角度，速度                          					                                               **   
-//** 参数返回：				                                                                                       **
-//************************************************************************************************************/
-
-//void Motor_KeepAngle(float nowangle ,float angle,int speed)
-//{
-//		int PID_FINAL=PID_Loc_V(nowangle+angle,Angle_Data.yaw,&PID_A,199999);
-//		if(PID_FINAL>110)	PID_FINAL=110;
-//		if(PID_FINAL<-110)	PID_FINAL=-110;
-////		if(PID_A.Ek<=2&&PID_A.Ek>=-4)
-////		{
-//			Motor_RealSpeed(-PID_FINAL+speed, R);
-//			Motor_RealSpeed(PID_FINAL+speed, L);
-////		}
-////		else
-////		{
-////			Motor_RealSpeed(-PID_FINAL, R);
-////			Motor_RealSpeed(PID_FINAL, L);
-////		}
-//}
-
-///************************************************************************************************************
-//** void Motor_Distance(int angle,int distance);                				                      		           **                                                              
-//** 功能描述：PID保持稳定角度前进一定距离                                                                 	   **
-//** 参数说明：左右电机，速度                          					                                               **   
-//** 参数返回：				                                                                                       **
-//************************************************************************************************************/
-
-//void Motor_Distance(float nowangle ,float angle,int distance)
-//{
-//		int PID_FINAL=PID_Loc_V(distance,accu_l+accu_r,&PID_D,30000);
-//		if(PID_FINAL>100)	PID_FINAL=100;
-//		if(PID_FINAL<-100)	PID_FINAL=-100;		  
-//		
-//		Motor_KeepAngle(nowangle,angle,PID_FINAL);
-
-//}
 
