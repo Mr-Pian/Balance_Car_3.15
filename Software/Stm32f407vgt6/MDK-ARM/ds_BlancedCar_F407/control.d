@@ -46,3 +46,4 @@ ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 ds_blancedcar_f407\control.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
+ds_blancedcar_f407\control.o: ..\Application\filter.h

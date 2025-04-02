@@ -34,7 +34,7 @@
 #define TFT18W        240 //TFT屏幕宽像素个数
 #define TFT18H        240 //TFT屏幕高像素个数
 
-#define USE_SPI_DMA   1 //使能DMA传输
+#define USE_SPI_DMA   0 //使能DMA传输
 #define USE_EX_GRAM   0  //使能外部显存
 #define USE_HORIZONTAL 2//设置横屏或者竖屏显示
 												//0:竖屏（正向）

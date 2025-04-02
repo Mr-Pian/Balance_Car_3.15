@@ -1,10 +1,16 @@
 #include "control.h"
 #include "tb6612.h"
+#include "filter.h"
 
 PID_TypeDef pid_speed_L;
 PID_TypeDef pid_speed_R;
-sensor_typedef sensor_val;
+motor_typedef motor_L;
+motor_typedef motor_R;
+imu_typedef the_imu;
+PID_pack_typedef the_pid;
 car_typedef the_car;
+float_data_typedef temp_float_data;
+uint8_t Received_Buffer[128];
 
 /**
   * @name   Get_Motor_Speed(car_typedef* hcar)
@@ -20,47 +26,46 @@ car_typedef the_car;
 
 void Get_Motor_Speed(car_typedef* hcar)
 {
-	uint16_t counter_a = 0, counter_b = 0;
-	float angle_a = 0.0, angle_b = 0.0;
+  int16_t counter_a = 0, counter_b = 0;
 	
-	counter_a = __HAL_TIM_GET_COUNTER(&htim3);
-	counter_b = __HAL_TIM_GET_COUNTER(&htim4);
+	counter_b = __HAL_TIM_GET_COUNTER(&htim3);
+	counter_b = -counter_b;
+	counter_a = __HAL_TIM_GET_COUNTER(&htim4);
 	
-	//防止跳变
-	if (counter_a > 32768)
-	{
-		counter_a = 65536 - counter_a;
-	}
-	if (counter_b > 32768)
-	{
-		counter_b = 65536 - counter_b;
-	}
+	//滑动均值滤波
+	movaverage_L.input = counter_a;
+	counter_a = AntiPulse_MovingAverage_Filter(&movaverage_L);
+	movaverage_R.input = counter_b;
+	counter_b = AntiPulse_MovingAverage_Filter(&movaverage_R);
+	
+	//把counter分别存入实例中
+	hcar->Motor_L->counter = counter_a;
+	hcar->Motor_R->counter = counter_b;
 
-	angle_a = 2.0*PI*(((float)counter_a)/30000.0);
-	angle_b = 2.0*PI*(((float)counter_b)/30000.0);
-	
-	//判断方向后加上符号
-	if (__HAL_TIM_GET_COUNTER(&htim3) > 32768)
-	{
-		hcar->Sensor_val->R_Speed = (angle_a*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
-	}
-	else
-	{
-		hcar->Sensor_val->R_Speed = -(angle_a*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
-	}
-	
-	if (__HAL_TIM_GET_COUNTER(&htim4) > 32768)
-	{
-		hcar->Sensor_val->L_Speed = -(angle_b*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
-	}
-	else
-	{
-		hcar->Sensor_val->L_Speed = (angle_b*(WHEEL_SIZE/2.0))*GET_MOTOR_SPEED_FRE;
-	}
+	//计算真实速度
+	hcar->Motor_L->real_speed = counter_a*COUNT_SPEED_K;
+	hcar->Motor_R->real_speed = counter_b*COUNT_SPEED_K;
 	
 	//计数器清零
 	__HAL_TIM_SET_COUNTER(&htim3, 0);
 	__HAL_TIM_SET_COUNTER(&htim4, 0);
+}
+
+/**
+  * @name   Get_Imu_Data(void)
+	*
+	* @brief  在dma空闲中断中更新缓冲区
+  *           
+  * @note   无         
+  *     
+  * @param  void
+  * 
+	* @retval void
+  **/
+
+void Refresh_Imu_Buffer(void)
+{
+	
 }
 
 /**
@@ -77,20 +82,20 @@ void Get_Motor_Speed(car_typedef* hcar)
 
 void Speed_CLoop_PID_Control(car_typedef* hcar)
 {
-	if (hcar->L_Motor_Status == M_On)
+	if (hcar->Motor_L->motor_status == M_On)
 	{
-		hcar->Pid_speed_L->f_cal_pid(&pid_speed_L, hcar->Sensor_val->L_Speed); //计算  
-		Motor_SetSpeed((int)hcar->Pid_speed_L->output, L);  //执行
+		hcar->the_pid->pid_speed_L->f_cal_pid(&pid_speed_L, hcar->Motor_L->real_speed); //计算  
+		Motor_SetSpeed((int)hcar->the_pid->pid_speed_L->output, L);  //执行
 	}
-	if (hcar->R_Motor_Status == M_On)
+	if (hcar->Motor_R->motor_status == M_On)
 	{
-		hcar->Pid_speed_R->f_cal_pid(&pid_speed_R, hcar->Sensor_val->R_Speed); //计算  
-		Motor_SetSpeed((int)hcar->Pid_speed_R->output, R);  //执行
+		hcar->the_pid->pid_speed_R->f_cal_pid(&pid_speed_R, hcar->Motor_R->real_speed);
+		Motor_SetSpeed((int)hcar->the_pid->pid_speed_R->output, R);
 	}
 }
 
 /**
-  * @name   Control_Init(car_typedef* car)
+  * @name   Control_Init(car_typedef* hcar)
 	*
 	* @brief  控制初始化
   *           
@@ -101,13 +106,21 @@ void Speed_CLoop_PID_Control(car_typedef* hcar)
 	* @retval void
   **/
 
-void Control_Init(car_typedef* car)
+void Control_Init(car_typedef* hcar)
 {
-	car->Sensor_val = &sensor_val;
-	car->Pid_speed_L = &pid_speed_L;
-	car->Pid_speed_R = &pid_speed_R;
-	car->L_Motor_Status = M_Off;
-	car->R_Motor_Status = M_Off;
-	car->Pid_speed_L->enable=1;  //pid使能
-	car->Pid_speed_R->enable=1;
+	//主结构体初始化
+	hcar->Imu = &the_imu;
+	hcar->Motor_L = &motor_L;
+	hcar->Motor_R = &motor_R;
+	hcar->the_pid = &the_pid;
+	
+	//pid包初始化
+	hcar->the_pid->pid_speed_L = &pid_speed_L; 
+	hcar->the_pid ->pid_speed_R = &pid_speed_R; 
+}
+
+//串口接收空闲中断回调函数
+void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
+{
+	
 }

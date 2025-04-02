@@ -158,6 +158,7 @@ void pid_init(volatile PID_TypeDef* pid)
 	pid->f_param_init = pid_param_init;
 	pid->f_pid_reset = pid_reset;
 	pid->f_cal_pid = pid_calculate;
+	pid->enable=1;  //pidÊ¹ÄÜ
 }
 
 

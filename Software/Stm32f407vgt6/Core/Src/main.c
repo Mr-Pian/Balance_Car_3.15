@@ -103,6 +103,8 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM3_Init();
   MX_TIM12_Init();
+  MX_TIM14_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 	delay_init(168);
 	//BSP_Hardware Init
@@ -110,37 +112,27 @@ int main(void)
 	
 	TFTSPI_Init();  //屏幕初始化lcd
 	
-	Play_Music(&Open);  //开机音效
+//	Play_Music(&Open);  //开机音效
 	
-	delay_ms(1000);
+//	delay_ms(1000);
 
 	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
 	HAL_TIM_Base_Start_IT(&htim3);
   HAL_TIM_Base_Start_IT(&htim4);
 	HAL_TIM_Base_Start_IT(&htim12);
+	HAL_TIM_Base_Start_IT(&htim14);
   
-	pid_init(&pid_speed_L);
-	pid_speed_L.f_param_init(&pid_speed_L,PID_Speed,50,50,0,2,0.1,350.0f,1.0f,0.0f);
-	pid_init(&pid_speed_R);
-	pid_speed_R.f_param_init(&pid_speed_R,PID_Speed,50,50,0,2,0.1,350.0f,1.0f,0.0f);
 	Control_Init(&the_car);
+	pid_init(the_car.the_pid->pid_speed_L);
+	the_car.the_pid->pid_speed_L->f_param_init(the_car.the_pid->pid_speed_L,PID_Speed,50,50,0,1,0.1,150.0f,6.5f,0.0f);
+	pid_init(the_car.the_pid->pid_speed_R);
+	the_car.the_pid->pid_speed_R->f_param_init(the_car.the_pid->pid_speed_R,PID_Speed,50,50,0,1,0.1,150.0f,6.5f,0.0f);
 	
-//	Motor_SetSpeed(20,L);
-//	Motor_SetSpeed(20,R);
-//	Motor_Start(Both);
-
-//	Motor_Start(Both);
-	the_car.L_Motor_Status = M_On;
-	the_car.R_Motor_Status = M_On;
-//	Motor_SetSpeed(Foward, 50, R);
-//	Motor_SetSpeed(Foward, 50, L);
-//	
+	the_car.Motor_L->motor_status = M_On;
+	the_car.Motor_R->motor_status = M_On;
+	
 	Motor_Start(Both);
-
-//	HAL_TIM_Base_Start(&htim4);
-//	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
-  
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -148,10 +140,12 @@ int main(void)
 	
 	while (1)
   {
-		TFT_Printf(0,0,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "LSPEED: %f ", the_car.Sensor_val->L_Speed);
-		TFT_Printf(0,24,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "RSPEED: %f ", the_car.Sensor_val->R_Speed);
-		TFT_Printf(0,48,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "LOUT: %f ", the_car.Pid_speed_L->output);
-		TFT_Printf(0,72,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "ROUT: %f ", the_car.Pid_speed_R->output);
+    delay_ms(2000);
+		the_car.the_pid->pid_speed_L->target = 0.7;
+		the_car.the_pid->pid_speed_R->target = 0.7;
+		delay_ms(2000);
+		the_car.the_pid->pid_speed_L->target = 0.1;
+		the_car.the_pid->pid_speed_R->target = 0.1;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
