@@ -9,8 +9,6 @@ motor_typedef motor_R;
 imu_typedef the_imu;
 PID_pack_typedef the_pid;
 car_typedef the_car;
-float_data_typedef temp_float_data;
-uint8_t Received_Buffer[128];
 
 /**
   * @name   Get_Motor_Speed(car_typedef* hcar)
@@ -49,23 +47,6 @@ void Get_Motor_Speed(car_typedef* hcar)
 	//计数器清零
 	__HAL_TIM_SET_COUNTER(&htim3, 0);
 	__HAL_TIM_SET_COUNTER(&htim4, 0);
-}
-
-/**
-  * @name   Get_Imu_Data(void)
-	*
-	* @brief  在dma空闲中断中更新缓冲区
-  *           
-  * @note   无         
-  *     
-  * @param  void
-  * 
-	* @retval void
-  **/
-
-void Refresh_Imu_Buffer(void)
-{
-	
 }
 
 /**
@@ -117,10 +98,4 @@ void Control_Init(car_typedef* hcar)
 	//pid包初始化
 	hcar->the_pid->pid_speed_L = &pid_speed_L; 
 	hcar->the_pid ->pid_speed_R = &pid_speed_R; 
-}
-
-//串口接收空闲中断回调函数
-void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
-{
-	
 }

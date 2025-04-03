@@ -32,6 +32,7 @@
 #include "tb6612.h"
 #include "control.h"
 #include "pid.h"
+#include "uart_unpack.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -122,6 +123,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim4);
 	HAL_TIM_Base_Start_IT(&htim12);
 	HAL_TIM_Base_Start_IT(&htim14);
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart3, Received_Buffer_1, 128); //开启imu数据接收DMA空闲中断
   
 	Control_Init(&the_car);
 	pid_init(the_car.the_pid->pid_speed_L);

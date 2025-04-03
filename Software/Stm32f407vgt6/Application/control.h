@@ -18,13 +18,6 @@
 #define COUNT_SPEED_K 0.00702f
 #endif
 /********************************************************************************/
-
-typedef union
-{
-	float Data;
-	uint8_t Data_bytes[4];
-}float_data_typedef;
-
 typedef enum  //±àÂëÆ÷×´Ì¬Ã¶¾Ù
 {
 	M_Off = 0,

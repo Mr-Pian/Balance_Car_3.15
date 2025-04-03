@@ -52,3 +52,4 @@ ds_blancedcar_f407\main.o: ../Drivers/BSP_HardWare/Music.h
 ds_blancedcar_f407\main.o: ../Drivers/BSP_HardWare/tb6612.h
 ds_blancedcar_f407\main.o: ../Application/control.h
 ds_blancedcar_f407\main.o: ../Application/pid.h
+ds_blancedcar_f407\main.o: ../Application/uart_unpack.h
