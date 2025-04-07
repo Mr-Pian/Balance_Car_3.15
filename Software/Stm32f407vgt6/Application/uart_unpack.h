@@ -16,7 +16,7 @@ typedef union
 {
 	uint16_t Data;
 	uint8_t Data_bytes[2];
-}uint8_data_typedef;
+}uint16_data_typedef;
 
 void Get_Imu_Data(car_typedef* hcar, uint8_t* Buffer);
 

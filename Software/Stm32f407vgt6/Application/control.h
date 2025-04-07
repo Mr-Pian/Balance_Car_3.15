@@ -26,16 +26,16 @@ typedef enum  //编码器状态枚举
 
 typedef struct
 {
-	uint16_t gyro_x;
-	uint16_t gyro_y;
-	uint16_t gyro_z;
-	uint16_t acc_x;
-	uint16_t acc_y;
-	uint16_t acc_z;
-	uint16_t temp;
 	float roll;
 	float pitch;
 	float yaw;
+	int16_t gyro_x;
+	int16_t gyro_y;
+	int16_t gyro_z;
+	int16_t acc_x;
+	int16_t acc_y;
+	int16_t acc_z;
+	int16_t temp;
 }imu_typedef;
 
 typedef struct
@@ -49,6 +49,8 @@ typedef struct
 {
 	PID_TypeDef* pid_speed_L;  //左轮速度闭环
 	PID_TypeDef* pid_speed_R;  //右轮速度闭环
+	PID_TypeDef* pid_stand_angle;  //直立环角度外环
+	PID_TypeDef* pid_stand_angle_speed;  //直立环角速度内环
 }PID_pack_typedef;
 
 //主结构体
@@ -63,6 +65,8 @@ typedef struct
 void Get_Motor_Speed(car_typedef* hcar);
 void Control_Init(car_typedef* car);
 void Speed_CLoop_PID_Control(car_typedef* hcar);
+void Stand_Angle_Speed_CLoop_PID_Control(car_typedef* hcar);
+void Stand_Angle_CLoop_PID_Control(car_typedef* hcar);
 
 extern car_typedef the_car;
 extern PID_pack_typedef the_pid;

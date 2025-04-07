@@ -314,7 +314,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>2</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Drivers/BSP_HardWare;../user;../Drivers/SYSTEM/sys;../Drivers/SYSTEM/delay;../Application</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../Drivers/BSP_HardWare;../user;../Drivers/SYSTEM/sys;../Drivers/SYSTEM/delay;../Application;../user/Angle;../user/Math_DSP</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -408,6 +408,21 @@
               <FileName>filter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Application\filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart_unpack.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\uart_unpack.c</FilePath>
+            </File>
+            <File>
+              <FileName>angle.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\Angle\angle.c</FilePath>
+            </File>
+            <File>
+              <FileName>HANA_math.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\Math_DSP\HANA_math.c</FilePath>
             </File>
             <File>
               <FileName>main.c</FileName>
@@ -555,11 +570,6 @@
               <FileName>stm32f4xx_hal_msp.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Core/Src/stm32f4xx_hal_msp.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart_unpack.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Application\uart_unpack.c</FilePath>
             </File>
           </Files>
         </Group>

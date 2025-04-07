@@ -1,9 +1,11 @@
 #include "control.h"
 #include "tb6612.h"
 #include "filter.h"
-
+#include "angle.h"
 PID_TypeDef pid_speed_L;
 PID_TypeDef pid_speed_R;
+PID_TypeDef pid_stand_angle;
+PID_TypeDef pid_stand_angle_speed;
 motor_typedef motor_L;
 motor_typedef motor_R;
 imu_typedef the_imu;
@@ -50,7 +52,7 @@ void Get_Motor_Speed(car_typedef* hcar)
 }
 
 /**
-  * @name   Get_Motor_Speed(car_typedef* hcar)
+  * @name   Speed_CLoop_PID_Control(car_typedef* hcar)
 	*
 	* @brief  轮上速度闭环执行函数
   *           
@@ -76,6 +78,41 @@ void Speed_CLoop_PID_Control(car_typedef* hcar)
 }
 
 /**
+  * @name   Stand_Angle_CLoop_PID_Control(car_typedef* hcar)
+	*
+	* @brief  直立环角度环执行函数
+  *           
+  * @note   该函数需要运行在一个固定的时基下         
+  *     
+  * @param  car_typedef结构体指针
+  * 
+	* @retval void
+  **/
+void Stand_Angle_CLoop_PID_Control(car_typedef* hcar)
+{
+	hcar->the_pid->pid_stand_angle->f_cal_pid(&pid_stand_angle, hcar->Imu->roll);
+	hcar->the_pid->pid_stand_angle_speed->target = hcar->the_pid->pid_stand_angle->output;
+}	
+
+/**
+  * @name   Stand_Angle_Speed_CLoop_PID_Control(car_typedef* hcar)
+	*
+	* @brief  直立环角速度环执行函数
+  *           
+  * @note   该函数需要运行在一个固定的时基下         
+  *     
+  * @param  car_typedef结构体指针
+  * 
+	* @retval void
+  **/
+void Stand_Angle_Speed_CLoop_PID_Control(car_typedef* hcar)
+{
+	hcar->the_pid->pid_stand_angle_speed->f_cal_pid(&pid_stand_angle_speed, hcar->Imu->gyro_x*Gyro_Gain);
+	hcar->the_pid->pid_speed_L->target = -hcar->the_pid->pid_stand_angle_speed->output;
+	hcar->the_pid->pid_speed_R->target = -hcar->the_pid->pid_stand_angle_speed->output;
+}
+
+/**
   * @name   Control_Init(car_typedef* hcar)
 	*
 	* @brief  控制初始化
@@ -97,5 +134,7 @@ void Control_Init(car_typedef* hcar)
 	
 	//pid包初始化
 	hcar->the_pid->pid_speed_L = &pid_speed_L; 
-	hcar->the_pid ->pid_speed_R = &pid_speed_R; 
+	hcar->the_pid->pid_speed_R = &pid_speed_R;
+	hcar->the_pid->pid_stand_angle = &pid_stand_angle;
+	hcar->the_pid->pid_stand_angle_speed = &pid_stand_angle_speed;
 }

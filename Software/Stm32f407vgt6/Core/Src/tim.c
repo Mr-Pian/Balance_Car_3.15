@@ -29,6 +29,7 @@
 /* USER CODE END Include */
 
 uint16_t counter_500_hz = 0;
+uint16_t counter_100_hz = 0;
 
 /***************************************定时器中断回调函数****************************************/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -39,9 +40,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		Speed_CLoop_PID_Control(&the_car);
 		
 		counter_500_hz++;
+		counter_100_hz++;
 		if (counter_500_hz == 2)  //500hz时基
 		{
 			counter_500_hz = 0;
+			Stand_Angle_Speed_CLoop_PID_Control(&the_car);
+		}
+		if (counter_100_hz == 10)  //100hz时基
+		{
+			counter_100_hz = 0;
+			Stand_Angle_CLoop_PID_Control(&the_car);
 		}
 	}
 	
@@ -49,9 +57,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	{
 //		TFT_Printf(0,0,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "LSPEED: %f ", the_car.Motor_L->real_speed);
 //		TFT_Printf(0,24,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "RSPEED: %f ", the_car.Motor_R->real_speed);
-//		TFT_Printf(0,48,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "LOUT: %f ", the_car.the_pid->pid_speed_L->output);
-//		TFT_Printf(0,72,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "ROUT: %f ", the_car.Pid_speed_R->output);
-		uart_printf(&huart1, "%f,%f\n", the_car.Motor_L->real_speed, the_car.Motor_R->real_speed);
+		TFT_Printf(0,48,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "AOUT: %f ", the_car.the_pid->pid_stand_angle->output);
+		TFT_Printf(0,72,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "ASOUT: %f ", the_car.the_pid->pid_stand_angle_speed->output*100.0f);
+		TFT_Printf(0,96,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "OUT: %f ", the_car.the_pid->pid_speed_L->output);
+//	uart_printf(&huart1, "%f,%f\n", the_car.Motor_L->real_speed, the_car.Motor_R->real_speed);
+		//uart_printf(&huart1, "%f, %f, %f, %d, %d, %d, %d, %d, %d, %d\n", the_car.Imu->pitch, the_car.Imu->roll, the_car.Imu->yaw, the_car.Imu->gyro_x, the_car.Imu->gyro_y, the_car.Imu->gyro_z,the_car.Imu->acc_x, the_car.Imu->acc_y, the_car.Imu->acc_z, the_car.Imu->temp);
 	}
 }
 
@@ -374,7 +384,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     __HAL_RCC_TIM12_CLK_ENABLE();
 
     /* TIM12 interrupt Init */
-    HAL_NVIC_SetPriority(TIM8_BRK_TIM12_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(TIM8_BRK_TIM12_IRQn, 0, 1);
     HAL_NVIC_EnableIRQ(TIM8_BRK_TIM12_IRQn);
   /* USER CODE BEGIN TIM12_MspInit 1 */
 

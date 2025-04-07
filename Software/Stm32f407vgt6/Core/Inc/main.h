@@ -69,6 +69,9 @@ void Error_Handler(void);
 #define BIN2_GPIO_Port GPIOE
 #define PWMB_Pin GPIO_PIN_9
 #define PWMB_GPIO_Port GPIOE
+#define Key2_Pin GPIO_PIN_12
+#define Key2_GPIO_Port GPIOB
+#define Key2_EXTI_IRQn EXTI15_10_IRQn
 #define LCD_CS_Pin GPIO_PIN_15
 #define LCD_CS_GPIO_Port GPIOA
 #define LCD_DC_Pin GPIO_PIN_11

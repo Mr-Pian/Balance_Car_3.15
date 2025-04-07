@@ -117,6 +117,20 @@ int main(void)
 	
 //	delay_ms(1000);
 
+	
+  
+	Control_Init(&the_car);
+	pid_init(the_car.the_pid->pid_speed_L);
+	the_car.the_pid->pid_speed_L->f_param_init(the_car.the_pid->pid_speed_L,PID_Speed,50,50,0,1,0.0,420.0f,7.0f,0.0f);
+	the_car.the_pid->pid_speed_L->enable = 1;
+	pid_init(the_car.the_pid->pid_speed_R);
+	the_car.the_pid->pid_speed_R->f_param_init(the_car.the_pid->pid_speed_R,PID_Speed,50,50,0,1,0.0,420.0f,7.0f,0.0f);  //150.0f,6.5f,0.0f);
+	the_car.the_pid->pid_speed_R->enable = 1;
+	pid_init(the_car.the_pid->pid_stand_angle);
+	the_car.the_pid->pid_stand_angle->f_param_init(the_car.the_pid->pid_stand_angle,PID_Position,0,1000,0,10,0.0, 80.0f,0.0f,0.0f);  //80.0f,0.0f,0.0f);
+	pid_init(the_car.the_pid->pid_stand_angle_speed);
+	the_car.the_pid->pid_stand_angle_speed->f_param_init(the_car.the_pid->pid_stand_angle_speed,PID_Position,0,1000,0,10,0.0,0.001f,0.0f,0.0005f);
+	
 	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
 	HAL_TIM_Base_Start_IT(&htim3);
@@ -124,30 +138,24 @@ int main(void)
 	HAL_TIM_Base_Start_IT(&htim12);
 	HAL_TIM_Base_Start_IT(&htim14);
 	HAL_UARTEx_ReceiveToIdle_DMA(&huart3, Received_Buffer_1, 128); //开启imu数据接收DMA空闲中断
-  
-	Control_Init(&the_car);
-	pid_init(the_car.the_pid->pid_speed_L);
-	the_car.the_pid->pid_speed_L->f_param_init(the_car.the_pid->pid_speed_L,PID_Speed,50,50,0,1,0.1,150.0f,6.5f,0.0f);
-	pid_init(the_car.the_pid->pid_speed_R);
-	the_car.the_pid->pid_speed_R->f_param_init(the_car.the_pid->pid_speed_R,PID_Speed,50,50,0,1,0.1,150.0f,6.5f,0.0f);
 	
 	the_car.Motor_L->motor_status = M_On;
 	the_car.Motor_R->motor_status = M_On;
 	
 	Motor_Start(Both);
-  /* USER CODE END 2 */
+	/* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	
 	while (1)
   {
-    delay_ms(2000);
-		the_car.the_pid->pid_speed_L->target = 0.7;
-		the_car.the_pid->pid_speed_R->target = 0.7;
-		delay_ms(2000);
-		the_car.the_pid->pid_speed_L->target = 0.1;
-		the_car.the_pid->pid_speed_R->target = 0.1;
+//    delay_ms(2000);
+//		the_car.the_pid->pid_speed_L->target = 0.7;
+//		the_car.the_pid->pid_speed_R->target = 0.7;
+//		delay_ms(2000);
+//		the_car.the_pid->pid_speed_L->target = 0.1;
+//		the_car.the_pid->pid_speed_R->target = 0.1;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
