@@ -126,15 +126,15 @@ static float pid_calculate(volatile PID_TypeDef* pid, float measure)
 					//pid输出和
 					pid->output += pid->pout + pid->iout + pid->dout;//增量输出	
 
-//					//输出限幅(简单限幅)
-//					if(pid->output > pid->MaxOutput)         
-//					{
-//						pid->output = pid->MaxOutput;
-//					}
-//					if(pid->output < -(pid->MaxOutput))
-//					{
-//						pid->output = -(pid->MaxOutput);
-//					}
+					//输出限幅(简单限幅)
+					if(pid->output > pid->MaxOutput)         
+					{
+						pid->output = pid->MaxOutput;
+					}
+					if(pid->output < -(pid->MaxOutput))
+					{
+						pid->output = -(pid->MaxOutput);
+					}
 				}
 
 			}

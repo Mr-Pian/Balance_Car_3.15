@@ -3,6 +3,8 @@
 #include "main.h"
 //#include "control.h"
 #include "usart.h"
+#define MAX_MOTOR_DUTY  4000-1
+#define MIN_MOTOR_DUTY  -4000+1
 #define R 1
 #define L 0
 #define Both 2

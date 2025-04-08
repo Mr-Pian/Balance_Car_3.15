@@ -15,7 +15,7 @@
 #endif
 
 #if !CM_S
-#define COUNT_SPEED_K 0.00702f
+#define COUNT_SPEED_K 0.00702f*0.5f //500Hz
 #endif
 /********************************************************************************/
 typedef enum  //编码器状态枚举
@@ -51,6 +51,7 @@ typedef struct
 	PID_TypeDef* pid_speed_R;  //右轮速度闭环
 	PID_TypeDef* pid_stand_angle;  //直立环角度外环
 	PID_TypeDef* pid_stand_angle_speed;  //直立环角速度内环
+	PID_TypeDef* pid_target_speed;  //目标速度环（输出是目标角度）
 }PID_pack_typedef;
 
 //主结构体
@@ -67,6 +68,7 @@ void Control_Init(car_typedef* car);
 void Speed_CLoop_PID_Control(car_typedef* hcar);
 void Stand_Angle_Speed_CLoop_PID_Control(car_typedef* hcar);
 void Stand_Angle_CLoop_PID_Control(car_typedef* hcar);
+void Target_Speed_CLoop_PID_Control(car_typedef* hcar);
 
 extern car_typedef the_car;
 extern PID_pack_typedef the_pid;

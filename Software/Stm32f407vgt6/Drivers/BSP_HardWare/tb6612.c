@@ -12,6 +12,14 @@
 
 int Motor_SetSpeed(int speed, uint8_t L_R)
 { 
+	if(speed>MAX_MOTOR_DUTY)
+	{
+		speed = MAX_MOTOR_DUTY;
+	}
+	else if(speed<MIN_MOTOR_DUTY)
+	{
+		speed = MIN_MOTOR_DUTY;
+	}
 	if (L_R == 1)  //ÓÒ±ß×ª
 	{
 		if (speed >= 0)  //Õý×ª

@@ -307,15 +307,18 @@ void EXTI15_10_IRQHandler(void)
 		{
 			the_car.the_pid->pid_stand_angle->enable=1;
 			the_car.the_pid->pid_stand_angle_speed->enable=1;
+			the_car.the_pid->pid_target_speed->enable=1;
 			flag = 1;
 		}
 		else 
 		{
 			flag = 0; 
 			the_car.the_pid->pid_stand_angle->enable=0;
-			the_car.the_pid->pid_stand_angle_speed->enable=0; 
+			the_car.the_pid->pid_stand_angle_speed->enable=0;
+			the_car.the_pid->pid_target_speed->enable=0;
 			the_car.the_pid->pid_stand_angle->output = 0;
 			the_car.the_pid->pid_stand_angle_speed->output = 0;
+			the_car.the_pid->pid_target_speed->output = 0;
 		}
 	}
 

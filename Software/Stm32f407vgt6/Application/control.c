@@ -6,6 +6,7 @@ PID_TypeDef pid_speed_L;
 PID_TypeDef pid_speed_R;
 PID_TypeDef pid_stand_angle;
 PID_TypeDef pid_stand_angle_speed;
+PID_TypeDef pid_target_speed;
 motor_typedef motor_L;
 motor_typedef motor_R;
 imu_typedef the_imu;
@@ -62,18 +63,18 @@ void Get_Motor_Speed(car_typedef* hcar)
   * 
 	* @retval void
   **/
-
 void Speed_CLoop_PID_Control(car_typedef* hcar)
 {
+	//positive_control = 1000*(int)(hcar->Motor_L->real_speed+hcar->Motor_R->real_speed)*0.5f;
 	if (hcar->Motor_L->motor_status == M_On)
 	{
 		hcar->the_pid->pid_speed_L->f_cal_pid(&pid_speed_L, hcar->Motor_L->real_speed); //计算  
-		Motor_SetSpeed((int)hcar->the_pid->pid_speed_L->output, L);  //执行
+		//Motor_SetSpeed((int)(hcar->the_pid->pid_speed_L->output), L);  //执行
 	}
 	if (hcar->Motor_R->motor_status == M_On)
 	{
 		hcar->the_pid->pid_speed_R->f_cal_pid(&pid_speed_R, hcar->Motor_R->real_speed);
-		Motor_SetSpeed((int)hcar->the_pid->pid_speed_R->output, R);
+		//Motor_SetSpeed((int)(hcar->the_pid->pid_speed_R->output), R);
 	}
 }
 
@@ -108,8 +109,30 @@ void Stand_Angle_CLoop_PID_Control(car_typedef* hcar)
 void Stand_Angle_Speed_CLoop_PID_Control(car_typedef* hcar)
 {
 	hcar->the_pid->pid_stand_angle_speed->f_cal_pid(&pid_stand_angle_speed, hcar->Imu->gyro_x*Gyro_Gain);
-	hcar->the_pid->pid_speed_L->target = -hcar->the_pid->pid_stand_angle_speed->output;
-	hcar->the_pid->pid_speed_R->target = -hcar->the_pid->pid_stand_angle_speed->output;
+//	hcar->the_pid->pid_speed_L->target = -hcar->the_pid->pid_stand_angle_speed->output;
+//	hcar->the_pid->pid_speed_R->target = -hcar->the_pid->pid_stand_angle_speed->output;
+	
+	Motor_SetSpeed(-(int)(hcar->the_pid->pid_stand_angle_speed->output), L);  //执行
+	Motor_SetSpeed(-(int)(hcar->the_pid->pid_stand_angle_speed->output), R);  //执行
+}
+
+/**
+  * @name   Target_Speed_CLoop_PID_Control(car_typedef* hcar)
+	*
+	* @brief  目标速度外环执行函数
+  *           
+  * @note   该函数需要运行在一个固定的时基下         
+  *     
+  * @param  car_typedef结构体指针
+  * 
+	* @retval void
+  **/
+void Target_Speed_CLoop_PID_Control(car_typedef* hcar)
+{
+	float mean_speed = 0;
+	mean_speed = (hcar->Motor_L->real_speed + hcar->Motor_R->real_speed)/2.0f;
+	hcar->the_pid->pid_target_speed->f_cal_pid(&pid_target_speed, mean_speed);
+	hcar->the_pid->pid_stand_angle->target = hcar->the_pid->pid_target_speed->output;
 }
 
 /**
@@ -137,4 +160,5 @@ void Control_Init(car_typedef* hcar)
 	hcar->the_pid->pid_speed_R = &pid_speed_R;
 	hcar->the_pid->pid_stand_angle = &pid_stand_angle;
 	hcar->the_pid->pid_stand_angle_speed = &pid_stand_angle_speed;
+	hcar->the_pid->pid_target_speed = &pid_target_speed;
 }

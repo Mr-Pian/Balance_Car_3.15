@@ -36,13 +36,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	if (htim == &htim12)  //(最高优先级)1000hz时基
 	{
-		Get_Motor_Speed(&the_car);
-		Speed_CLoop_PID_Control(&the_car);
-		
+
 		counter_500_hz++;
 		counter_100_hz++;
 		if (counter_500_hz == 2)  //500hz时基
 		{
+			Get_Motor_Speed(&the_car);
 			counter_500_hz = 0;
 			Stand_Angle_Speed_CLoop_PID_Control(&the_car);
 		}
@@ -50,16 +49,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			counter_100_hz = 0;
 			Stand_Angle_CLoop_PID_Control(&the_car);
+			Target_Speed_CLoop_PID_Control(&the_car);
 		}
 	}
 	
 	if (htim == &htim14)  //(不准确)200hz时基
 	{
-//		TFT_Printf(0,0,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "LSPEED: %f ", the_car.Motor_L->real_speed);
-//		TFT_Printf(0,24,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "RSPEED: %f ", the_car.Motor_R->real_speed);
-		TFT_Printf(0,48,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "AOUT: %f ", the_car.the_pid->pid_stand_angle->output);
-		TFT_Printf(0,72,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "ASOUT: %f ", the_car.the_pid->pid_stand_angle_speed->output*100.0f);
-		TFT_Printf(0,96,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "OUT: %f ", the_car.the_pid->pid_speed_L->output);
+
 //	uart_printf(&huart1, "%f,%f\n", the_car.Motor_L->real_speed, the_car.Motor_R->real_speed);
 		//uart_printf(&huart1, "%f, %f, %f, %d, %d, %d, %d, %d, %d, %d\n", the_car.Imu->pitch, the_car.Imu->roll, the_car.Imu->yaw, the_car.Imu->gyro_x, the_car.Imu->gyro_y, the_car.Imu->gyro_z,the_car.Imu->acc_x, the_car.Imu->acc_y, the_car.Imu->acc_z, the_car.Imu->temp);
 	}
@@ -91,9 +87,9 @@ void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 84-1;
+  htim1.Init.Prescaler = 0;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 100-1;
+  htim1.Init.Period = 4000-1;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -248,9 +244,9 @@ void MX_TIM5_Init(void)
 
   /* USER CODE END TIM5_Init 1 */
   htim5.Instance = TIM5;
-  htim5.Init.Prescaler = 84-1;
+  htim5.Init.Prescaler = 0;
   htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim5.Init.Period = 100-1;
+  htim5.Init.Period = 4000-1;
   htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
