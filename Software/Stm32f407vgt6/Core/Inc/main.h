@@ -57,6 +57,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define KEY_UP_Pin GPIO_PIN_2
+#define KEY_UP_GPIO_Port GPIOC
+#define KEY_DOWN_Pin GPIO_PIN_3
+#define KEY_DOWN_GPIO_Port GPIOC
 #define PWMA_Pin GPIO_PIN_0
 #define PWMA_GPIO_Port GPIOA
 #define AIN2_Pin GPIO_PIN_1
@@ -69,9 +73,16 @@ void Error_Handler(void);
 #define BIN2_GPIO_Port GPIOE
 #define PWMB_Pin GPIO_PIN_9
 #define PWMB_GPIO_Port GPIOE
-#define Key2_Pin GPIO_PIN_12
-#define Key2_GPIO_Port GPIOB
-#define Key2_EXTI_IRQn EXTI15_10_IRQn
+#define KEY_BACK_Pin GPIO_PIN_12
+#define KEY_BACK_GPIO_Port GPIOB
+#define KEY_OK_Pin GPIO_PIN_13
+#define KEY_OK_GPIO_Port GPIOB
+#define KEY_LEFT_Pin GPIO_PIN_14
+#define KEY_LEFT_GPIO_Port GPIOB
+#define KEY_RIGHT_Pin GPIO_PIN_15
+#define KEY_RIGHT_GPIO_Port GPIOB
+#define EEPROM_WC_Pin GPIO_PIN_8
+#define EEPROM_WC_GPIO_Port GPIOC
 #define LCD_CS_Pin GPIO_PIN_15
 #define LCD_CS_GPIO_Port GPIOA
 #define LCD_DC_Pin GPIO_PIN_11

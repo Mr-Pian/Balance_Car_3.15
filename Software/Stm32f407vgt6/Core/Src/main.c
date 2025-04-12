@@ -20,6 +20,7 @@
 #include "main.h"
 #include "dma.h"
 #include "i2c.h"
+#include "rng.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -33,6 +34,10 @@
 #include "control.h"
 #include "pid.h"
 #include "uart_unpack.h"
+#include "ws2812.h"
+#include "key.h"
+#include "UI.h"
+#include "EEPROM.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,7 +69,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /**
@@ -91,6 +95,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+	delay_init(168);//延时初始化  --别动！！！
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -106,45 +111,41 @@ int main(void)
   MX_TIM12_Init();
   MX_TIM14_Init();
   MX_USART3_UART_Init();
+  MX_TIM2_Init();
+  MX_RNG_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-	delay_init(168);
-	//BSP_Hardware Init
-	
 	
 	TFTSPI_Init();  //屏幕初始化lcd
-	
+	WS2812_Init(); //WS2812初始化
+
 	//Play_Music(&Open);  //开机音效
-	
 	//delay_ms(1000);
 
-	
-  
-	Control_Init(&the_car);
-	pid_init(the_car.the_pid->pid_speed_L);
-	the_car.the_pid->pid_speed_L->f_param_init(the_car.the_pid->pid_speed_L,PID_Speed,MAX_MOTOR_DUTY,MAX_MOTOR_DUTY,0,1,0.0,10000.0f,100.0f,0.0f);
-	the_car.the_pid->pid_speed_L->enable = 1;
-	pid_init(the_car.the_pid->pid_speed_R);
-	the_car.the_pid->pid_speed_R->f_param_init(the_car.the_pid->pid_speed_R,PID_Speed,MAX_MOTOR_DUTY,MAX_MOTOR_DUTY,0,1,0.0,10000.0f,100.0f,0.0f);  //150.0f,6.5f,0.0f);
-	the_car.the_pid->pid_speed_R->enable = 1;
-	pid_init(the_car.the_pid->pid_stand_angle);
-	the_car.the_pid->pid_stand_angle->f_param_init(the_car.the_pid->pid_stand_angle,PID_Position,0,1000,0,10,0.0, 80.0f,0.0f,100.0f);  //80.0f,0.0f,0.0f);
-	pid_init(the_car.the_pid->pid_stand_angle_speed);
-	the_car.the_pid->pid_stand_angle_speed->f_param_init(the_car.the_pid->pid_stand_angle_speed,PID_Position,0,1000,0,2,0.0,3.0f,0.03f,10.0f);
-	pid_init(the_car.the_pid->pid_target_speed);
-	the_car.the_pid->pid_target_speed->f_param_init(the_car.the_pid->pid_target_speed,PID_Position,0,10,0,10,0.0f,8.0f,0.1f,2.0f);
-	
-	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-	HAL_TIM_Base_Start_IT(&htim3);
-  HAL_TIM_Base_Start_IT(&htim4);
-	HAL_TIM_Base_Start_IT(&htim12);
-	HAL_TIM_Base_Start_IT(&htim14);
-	HAL_UARTEx_ReceiveToIdle_DMA(&huart3, Received_Buffer_1, 128); //开启imu数据接收DMA空闲中断
-	
+	Control_Init(&the_car);//控制器初始化
+
+	if(E2P_Check())//EEPROM检测
+	{
+		TFT_Printf(0,0,COLOR_RED,COLOR_BLACK,fsize_12X24,"EEPROM_ERR");
+	}
+	else
+	{
+		E2P_Read_allParam();//读取EEPROM中的参数 放在control_init之前
+	}
+
+	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);//启动编码器读取
+	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);//启动编码器读取
+	HAL_TIM_Base_Start_IT(&htim12);//任务定时器启动
+	HAL_TIM_Base_Start_IT(&htim14);//任务定时器启动
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart3, USART3_RX_BUF, 128); //开启imu数据接收DMA空闲中断
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart2, USART2_RX_BUF, 128); //开启视觉数据接收DMA空闲中断
+	HAL_UARTEx_ReceiveToIdle_DMA(&huart1, USART1_RX_BUF, 128); //开启蓝牙数据接收DMA空闲中断
 	the_car.Motor_L->motor_status = M_On;
 	the_car.Motor_R->motor_status = M_On;
-	
-	Motor_Start(Both);
+	while(the_car.Imu->is_ok != 1)//等待IMU初始化
+	{
+		TFT_Printf(32,60,COLOR_RED,COLOR_BLACK,fsize_16X32,"IMU_Waiting");
+	}	
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -152,17 +153,7 @@ int main(void)
 	
 	while (1)
   {
-		TFT_Printf(0,0,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "LSPEED: %f ", the_car.Motor_L->real_speed);
-		TFT_Printf(0,24,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "RSPEED: %f ", the_car.Motor_R->real_speed);
-		TFT_Printf(0,48,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "AOUT: %f ", the_car.the_pid->pid_stand_angle->output);
-		TFT_Printf(0,72,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "ASOUT: %f ", the_car.the_pid->pid_stand_angle_speed->output);
-		TFT_Printf(0,96,COLOR_BLACK, COLOR_WHITE, fsize_12X24, "OUT: %f ", the_car.the_pid->pid_target_speed->output);		
-//    delay_ms(2000);
-//		the_car.the_pid->pid_speed_L->target = 0.7;
-//		the_car.the_pid->pid_speed_R->target = 0.7;
-//		delay_ms(2000);
-//		the_car.the_pid->pid_speed_L->target = 0.1;
-//		the_car.the_pid->pid_speed_R->target = 0.1;
+		main_menu();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -194,7 +185,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 4;
   RCC_OscInitStruct.PLL.PLLN = 168;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();

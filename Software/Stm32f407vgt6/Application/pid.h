@@ -60,8 +60,8 @@ typedef struct _PID_TypeDef
 	
 	void (*f_param_init)(volatile struct _PID_TypeDef *pid,  //PID参数初始化
 				PID_ID id,
-				uint16_t maxOutput,
-				uint16_t integralLimit,
+				float maxOutput,
+				float integralLimit,
 				float deadband,
 				float controlPeriod,    
 				float  target,

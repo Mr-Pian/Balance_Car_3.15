@@ -3,7 +3,7 @@ ds_blancedcar_f407\delay.o: ../Drivers/SYSTEM/sys/sys.h
 ds_blancedcar_f407\delay.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 ds_blancedcar_f407\delay.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 ds_blancedcar_f407\delay.o: ../Drivers/CMSIS/Include/core_cm4.h
-ds_blancedcar_f407\delay.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+ds_blancedcar_f407\delay.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
 ds_blancedcar_f407\delay.o: ../Drivers/CMSIS/Include/cmsis_version.h
 ds_blancedcar_f407\delay.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 ds_blancedcar_f407\delay.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -15,7 +15,7 @@ ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rc
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 ds_blancedcar_f407\delay.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-ds_blancedcar_f407\delay.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+ds_blancedcar_f407\delay.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stddef.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
@@ -30,6 +30,7 @@ ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
+ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
 ds_blancedcar_f407\delay.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h

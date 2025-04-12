@@ -3,8 +3,8 @@
 #include "main.h"
 //#include "control.h"
 #include "usart.h"
-#define MAX_MOTOR_DUTY  4000-1
-#define MIN_MOTOR_DUTY  -4000+1
+#define MAX_MOTOR_DUTY  (3999)
+#define MIN_MOTOR_DUTY  (-3999)
 #define R 1
 #define L 0
 #define Both 2
@@ -14,7 +14,7 @@
 
 int Motor_Start(uint8_t L_R);
 int Motor_SetSpeed(int speed, uint8_t L_R);
-int Motor_Off(uint8_t L_R);
+int Motor_Stop(uint8_t L_R);
 
 #endif
 

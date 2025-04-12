@@ -831,11 +831,10 @@ ARM Macro Assembler    Page 13
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
 interwork --depend=ds_blancedcar_f407\startup_stm32f407xx.d -ods_blancedcar_f40
-7\startup_stm32f407xx.o -I.\RTE\_ds_BlancedCar_F407 -IC:\Users\Lenovo\AppData\L
-ocal\Arm\Packs\ARM\CMSIS\5.9.0\CMSIS\Core\Include --predefine="__MICROLIB SETA 
-1" --predefine="__UVISION_VERSION SETA 538" --predefine="_RTE_ SETA 1" --predef
-ine="STM32F407xx SETA 1" --predefine="_RTE_ SETA 1" --list=startup_stm32f407xx.
-lst startup_stm32f407xx.s
+7\startup_stm32f407xx.o -I.\RTE\_ds_BlancedCar_F407 -ID:\Keil5_pack\ARM\CMSIS\6
+.1.0\CMSIS\Core\Include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_
+VERSION SETA 540" --predefine="STM32F407xx SETA 1" --predefine="_RTE_ SETA 1" -
+-list=startup_stm32f407xx.lst startup_stm32f407xx.s
 
 
 

@@ -5,6 +5,8 @@
 #include "EEPROM.h"
 #include "delay.h"
 #include "i2c.h"
+#include "control.h"
+#include "UI.h"
 /*引脚配置*********************/
 
 /**
@@ -358,5 +360,22 @@ storFloatData E2P_ReadFloatNum( uint16_t addr )
 //EEPROM读出所有参数
 void E2P_Read_allParam(void)
 {
-	;
+		the_car.the_pid->pid_stand_angle->kp = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*0).value;
+		the_car.the_pid->pid_stand_angle->ki = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*1).value;
+		the_car.the_pid->pid_stand_angle->kd = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*2).value;
+		the_car.the_pid->pid_stand_angle_speed->kp = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*3).value;
+		the_car.the_pid->pid_stand_angle_speed->ki = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*4).value;
+		the_car.the_pid->pid_stand_angle_speed->kd = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*5).value;
+		the_car.the_pid->pid_target_speed->kp = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*6).value;
+		the_car.the_pid->pid_target_speed->ki = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*7).value;
+		the_car.the_pid->pid_target_speed->kd = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*8).value;
+		the_car.the_pid->pid_turn_position->kp = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*9).value;
+		the_car.the_pid->pid_turn_position->ki = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*10).value;
+		the_car.the_pid->pid_turn_position->kd = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*11).value;
+		the_car.the_pid->pid_turn_gyro->kp = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*12).value;
+		the_car.the_pid->pid_turn_gyro->ki = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*13).value;
+		the_car.the_pid->pid_turn_gyro->kd = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*14).value;	
+		the_car.vs->pos_err_offset = E2P_ReadLenByte(EEPROM_ADDRESS_BASE+0x04*15, 4);
+		the_car.run_speed = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*16).value;
+		
 }

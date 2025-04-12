@@ -132,7 +132,7 @@ void TFTSPI_Init(void) {
 	TFTSPI_Write_Cmd(0x21);              //颜色反转
 	TFTSPI_Write_Cmd(0x29);              //开启屏幕显示
 
-	TFTSPI_CLS(COLOR_WHITE);//初始为全黑
+	TFTSPI_CLS(COLOR_BLACK);//初始为全黑
 }
 
 /*!
@@ -457,8 +457,9 @@ void TFTSPI_Fill_Area(unsigned short xs, unsigned short ys, unsigned short xe,
  * @date     2019/6/13 星期四
  */
 void TFTSPI_CLS(unsigned short color) {
-    uint32_t i, j;
+    uint32_t i;
 	#if USE_EX_GRAM
+			uint32_t j;
 			for (i = 0; i < TFT18H; i++) {
 					for (j = 0 ;j < TFT18W; j++) {
 							ex_gram[i*TFT18W + j] = color;
@@ -473,12 +474,7 @@ void TFTSPI_CLS(unsigned short color) {
 	for(i = 0;i<TFT18W*TFT18H;i++)
 		HAL_SPI_Transmit(&SPI_Handler,Data, 2, 0xffff);//发送数据
 		
-//    for (i = 0; i < TFT18W; i++)      //160
-//            {
-//        for (j = 0; j < TFT18H; j++) {
-//            TFTSPI_Write_Word(color);
-//        }
-//    }
+
 		
 	#endif
 
@@ -503,8 +499,9 @@ void TFTSPI_CLS(unsigned short color) {
  */
 void TFTSPI_Draw_Part(unsigned short xs, unsigned short ys, unsigned short xe,
         unsigned short ye, unsigned short color_dat) {
-    unsigned short i, j;
+    unsigned short i;
 	#if USE_EX_GRAM
+		unsigned short j;
     for (j = ys; j < (ye + 1); j++) {
         for (i = xs; i < (xe + 1); i++) {
             ex_gram[j*TFT18W + i] = color_dat;

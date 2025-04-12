@@ -18,8 +18,8 @@
 static void pid_param_init(
 	volatile PID_TypeDef * pid, //pid结构体
 	PID_ID   id,								//PID类型
-	uint16_t maxout,						//PID输出限幅
-	uint16_t intergral_limit,		//积分限幅
+	float maxout,						//PID输出限幅
+	float intergral_limit,		//积分限幅
 	float deadband,							//死区
 	float period,						//PID控制周期
 	float  target,						//PID目标
@@ -88,8 +88,8 @@ static float pid_calculate(volatile PID_TypeDef* pid, float measure)
 			pid->err = pid->target - pid->measure;
 			
 				 
-			//是否进入死区
-			if((__fabs(pid->err) > pid->DeadBand))
+//			//是否进入死区
+			if((__fabs(pid->err) >= pid->DeadBand))
 			{    
 				if(pid->id==PID_Position) //位置式PID
 				{ 
@@ -99,24 +99,23 @@ static float pid_calculate(volatile PID_TypeDef* pid, float measure)
 					 
 					 //积分是否超出限制
 					 if(pid->iout > pid->IntegralLimit)
-								pid->iout = pid->IntegralLimit;
+							pid->iout = pid->IntegralLimit;
 					 if(pid->iout < - pid->IntegralLimit)
 							pid->iout = - pid->IntegralLimit;
+
 					 //pid输出和
 					 pid->output = pid->pout + pid->iout + pid->dout;//绝对输出
 					 //pid->output = pid->output*0.7f + pid->last_output*0.3f;  //权重滤波
 			
-//					/***输出限幅"反计算抗饱和法"***/
-//					if(pid->output>pid->MaxOutput)         
-//					{
-//						pid->iout -= pid->output - pid->MaxOutput;
-//						pid->output = pid->MaxOutput;
-//					}
-//					if(pid->output < -(pid->MaxOutput))
-//					{
-//						pid->iout += pid->output - pid->MaxOutput;
-//						pid->output = -(pid->MaxOutput);
-//					}
+					/***输出限幅***/
+					if(pid->output>pid->MaxOutput)         
+					{
+						pid->output = pid->MaxOutput;
+					}
+					if(pid->output < -(pid->MaxOutput))
+					{
+						pid->output = -(pid->MaxOutput);
+					}
 				}
 				else if(pid->id==PID_Speed)//增量式PID
 				{ 
