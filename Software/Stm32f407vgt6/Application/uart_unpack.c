@@ -56,7 +56,7 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
   * 
 	* @retval void
   **/
-void Get_Imu_Data(car_typedef* hcar, uint8_t* Buffer,uint32_t size)
+static void Get_Imu_Data(car_typedef* hcar, uint8_t* Buffer,uint32_t size)
 {
 	int Frame_header = 0;  //帧头
 
@@ -66,23 +66,23 @@ void Get_Imu_Data(car_typedef* hcar, uint8_t* Buffer,uint32_t size)
 	for (int i=0; i<size - IMU_DATA_SIZE; i++)  //在缓冲区里找帧头
 	{
 		
-		if (Buffer[i] == 0x5A && Buffer[i+1] == 0xA5 && Buffer[i+28]  == 0x0D && Buffer[i+29] == 0x0A)  //找到有效帧
+		if (Buffer[i] == 0x5A && Buffer[i+1] == 0xA5 && Buffer[i+IMU_DATA_SIZE-1]  == 0x0D && Buffer[i+IMU_DATA_SIZE] == 0x0A)  //找到有效帧
 		{
 			Frame_header = i;
 			the_car.Imu->is_ok = 1;//IMU初始化完成
 			break;
 		}
 	}
-	if(Frame_header==0 && !(Buffer[Frame_header] == 0x5A && Buffer[Frame_header+1] == 0xA5 && Buffer[Frame_header+28]  == 0x0D && Buffer[Frame_header+29] == 0x0A))//没找到
+	if(Frame_header==0 && !(Buffer[Frame_header] == 0x5A && Buffer[Frame_header+1] == 0xA5 && Buffer[Frame_header+IMU_DATA_SIZE-1]  == 0x0D && Buffer[Frame_header+IMU_DATA_SIZE] == 0x0A))//没找到
 		return;
 	else
-		memcpy(hcar->Imu, &Buffer[Frame_header+2], 12+14);  //赋值
+		memcpy(hcar->Imu, &Buffer[Frame_header+2], 4*10);  //赋值
 }
 
 
 
 /*解析蓝牙指令*/
-void Get_BL_Data(uint8_t* Buffer,uint32_t size)
+static void Get_BL_Data(uint8_t* Buffer,uint32_t size)
 {
 	if(size !=BL_DATA_SIZE)
 		return;
@@ -108,32 +108,68 @@ void Get_BL_Data(uint8_t* Buffer,uint32_t size)
  		case 0x35://向右
 				BL_CMD |= 0x0800;
 				break;
- 		case 0x36://向右
+ 		case 0x36://关闭
 				BL_CMD |= 0x0400;
 				break;
 	}
 }
 
 /*解析视觉数据*/
-void Get_VS_Data(uint8_t* Buffer,uint32_t size)
+uint32_t vs_data_rx_cnt=0;
+uint32_t turn_cnt=0;
+static void Get_VS_Data(uint8_t* Buffer,uint32_t size)
 {
 	if(size <VS_DATA_SIZE)
 		return;
 	uint32_t i=0;
 	char str[5];
+	
 	for (i=0; i<size - (VS_DATA_SIZE-1); i++)  //在缓冲区里找帧头
 	{
 		memcpy(str,&Buffer[i],5);
+		
 		if (strcmp(str,"$LINE") == 0)  //找到有效帧
 		{
+			the_car.vs->state = 0;
+			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
+			vs_data_rx_cnt++;
+			turn_cnt = 0;
 			break;
 		}
+		else if(strcmp(str,"$LOST") == 0)
+		{
+			the_car.vs->state |= 0x80;
+			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
+			vs_data_rx_cnt++;
+			turn_cnt = 0;
+			break;				
+		}
+		else if(strcmp(str,"$LEFT") == 0)
+		{
+			turn_cnt++;
+			if(turn_cnt>=5)
+			{
+				the_car.vs->state |= 0x40;
+				turn_cnt = 0;
+			}
+			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
+			vs_data_rx_cnt++;
+			break;			
+		}
+		else if(strcmp(str,"$RIGH") == 0)
+		{
+			
+			turn_cnt++;
+			if(turn_cnt>=5)
+			{
+				the_car.vs->state |= 0x20;
+				turn_cnt = 0;
+			}
+			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
+			vs_data_rx_cnt++;
+			break;			
+		}		
 	}
-	if(i==(size - (VS_DATA_SIZE-1)) &&	strcmp(str,"$LINE") )//没找到
-		return;
-	else
-	{
-		the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
-	}
+
 
 }

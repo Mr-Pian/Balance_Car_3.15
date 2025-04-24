@@ -131,8 +131,11 @@ void run_func(void)
 	the_car.the_pid->pid_stand_angle_speed->enable = 1;
 	the_car.the_pid->pid_target_speed->enable = 1;
 	the_car.the_pid->pid_turn_gyro->enable = 1;
+	the_car.the_pid->pid_turn_angle->enable = 1;
 	the_car.the_pid->pid_turn_position->enable = 1;
 	Motor_Start(2);
+	the_car.start_yaw = the_car.Imu->yaw; 
+	the_car.run_distance = 0.0f;
 	while(1)
 	{
 		/***运行界面***/
@@ -142,25 +145,41 @@ void run_func(void)
 		TFT_Printf(0,24*1,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"YAW:%f ",the_car.Imu->yaw);
 
 		/*****速度信息*****/
-		TFT_Printf(0,24*2,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"L_SPEED:%f ",the_car.Motor_L->real_speed);
-		TFT_Printf(0,24*3,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"R_SPEED:%f ",the_car.Motor_R->real_speed);
-		TFT_Printf(0,24*4,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"A_SPEED:%f ",(the_car.Motor_L->real_speed+the_car.Motor_R->real_speed)*0.5f);		
+		TFT_Printf(0,24*2,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"L_SPEED:%.3f ",the_car.Motor_L->real_speed);
+		TFT_Printf(0,24*3,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"R_SPEED:%.3f ",the_car.Motor_R->real_speed);
+		TFT_Printf(0,24*4,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"RUN_SPEED:%.3f ",(the_car.Motor_L->real_speed+the_car.Motor_R->real_speed)*0.5f);	
+		TFT_Printf(0,24*5,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"T_SPEED:%.3f ",the_car.the_pid->pid_target_speed->target);	
 
 		/*****位置信息*****/
-		TFT_Printf(0,24*5,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"Pos_ERR:%d ",the_car.vs->pos_err);		
-
-
-		if(the_car.KEY->BACK == 1 || BL_CMD & 0x0400)//按键退出或者蓝牙关闭
+		TFT_Printf(0,24*6+1,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"Pos_ERR:%d ",the_car.vs->pos_err);		
+		TFT_Printf(0,24*7+1,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"Pos_FPS:%d ",the_car.vs->fps);		
+		TFT_Printf(0,24*8+1,COLOR_RED,COLOR_BLACK,fsize_12X24,"RUN:%.3f ",the_car.run_distance);
+		if(the_car.run_distance >= the_car.target_distance)//运行到指定距离
 		{
-			delay_ms(1000);
-			if(the_car.KEY->BACK == 1 || BL_CMD & 0x0400)
+				the_car.the_pid->pid_stand_angle->enable = 0;
+				the_car.the_pid->pid_stand_angle_speed->enable = 0;
+				the_car.the_pid->pid_target_speed->enable = 0;
+				the_car.the_pid->pid_turn_gyro->enable = 0;
+				the_car.the_pid->pid_turn_angle->enable = 0;
+				the_car.the_pid->pid_turn_position->enable = 0;   
+				the_car.start_yaw = 0;																																																																										
+				Motor_Stop(2);
+				BL_CMD = 0;
+				return;			
+		}
+		else if(the_car.KEY->BACK == 1 || BL_CMD & 0x0400 || fabs(the_car.Imu->roll)>=50.0f)//按键退出或者蓝牙关闭
+		{
+			delay_ms(500);
+			if(the_car.KEY->BACK == 1 || BL_CMD & 0x0400 || fabs(the_car.Imu->roll)>=50.0f)
 			{
 
 				the_car.the_pid->pid_stand_angle->enable = 0;
 				the_car.the_pid->pid_stand_angle_speed->enable = 0;
 				the_car.the_pid->pid_target_speed->enable = 0;
 				the_car.the_pid->pid_turn_gyro->enable = 0;
-				the_car.the_pid->pid_turn_position->enable = 0;
+				the_car.the_pid->pid_turn_angle->enable = 0;
+				the_car.the_pid->pid_turn_position->enable = 0;   
+				the_car.start_yaw = 0;																																																																										
 				Motor_Stop(2);
 				BL_CMD = 0;
 				return;
@@ -189,11 +208,16 @@ void param_func()
 			{"Turn_P_p:",&the_car.the_pid->pid_turn_position->kp,NULL,EEPROM_ADDRESS_BASE+4*9},
 			{"Turn_P_i:",&the_car.the_pid->pid_turn_position->ki,NULL,EEPROM_ADDRESS_BASE+4*10},
 			{"Turn_P_d:",&the_car.the_pid->pid_turn_position->kd,NULL,EEPROM_ADDRESS_BASE+4*11},
+//			{"Turn_A_p:",&the_car.the_pid->pid_turn_angle->kp,NULL,EEPROM_ADDRESS_BASE+4*18},
+//			{"Turn_A_i:",&the_car.the_pid->pid_turn_angle->ki,NULL,EEPROM_ADDRESS_BASE+4*19},
+//			{"Turn_A_d:",&the_car.the_pid->pid_turn_angle->kd,NULL,EEPROM_ADDRESS_BASE+4*20},
 			{"Turn_G_p:",&the_car.the_pid->pid_turn_gyro->kp,NULL,EEPROM_ADDRESS_BASE+4*12},
 			{"Turn_G_i:",&the_car.the_pid->pid_turn_gyro->ki,NULL,EEPROM_ADDRESS_BASE+4*13},
 			{"Turn_G_d:",&the_car.the_pid->pid_turn_gyro->kd,NULL,EEPROM_ADDRESS_BASE+4*14},	
 			{"VS_OFFSET:",NULL,(uint32_t*)&the_car.vs->pos_err_offset,EEPROM_ADDRESS_BASE+4*15},	
 			{"RUN_SPEED:",&the_car.run_speed,NULL,EEPROM_ADDRESS_BASE+4*16},
+			{"RUN_SPEED_K:",&the_car.run_speed_K,NULL,EEPROM_ADDRESS_BASE+4*17},
+			{"set_DIS:",&the_car.target_distance,NULL,EEPROM_ADDRESS_BASE+4*21},
 
 			{".."}								//结尾标志,方便自动计算数量
 		};

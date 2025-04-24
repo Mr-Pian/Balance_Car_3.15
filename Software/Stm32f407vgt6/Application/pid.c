@@ -14,6 +14,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "pid.h"
 #include "main.h"
+#include "math.h"
 /*参数初始化--------------------------------------------------------------*/
 static void pid_param_init(
 	volatile PID_TypeDef * pid, //pid结构体
@@ -89,7 +90,7 @@ static float pid_calculate(volatile PID_TypeDef* pid, float measure)
 			
 				 
 //			//是否进入死区
-			if((__fabs(pid->err) >= pid->DeadBand))
+			if((fabs(pid->err) >= pid->DeadBand))
 			{    
 				if(pid->id==PID_Position) //位置式PID
 				{ 
