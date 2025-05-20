@@ -116,6 +116,10 @@ static void Get_BL_Data(uint8_t* Buffer,uint32_t size)
 
 /*解析视觉数据*/
 uint32_t vs_data_rx_cnt=0;
+<<<<<<< HEAD
+=======
+uint32_t turn_cnt=0;
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 static void Get_VS_Data(uint8_t* Buffer,uint32_t size)
 {
 	if(size <VS_DATA_SIZE)
@@ -129,9 +133,16 @@ static void Get_VS_Data(uint8_t* Buffer,uint32_t size)
 		
 		if (strcmp(str,"$LINE") == 0)  //找到有效帧
 		{
+<<<<<<< HEAD
 			the_car.vs->state |= ~(0x80);
 			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
 			vs_data_rx_cnt++;
+=======
+			the_car.vs->state = 0;
+			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
+			vs_data_rx_cnt++;
+			turn_cnt = 0;
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 			break;
 		}
 		else if(strcmp(str,"$LOST") == 0)
@@ -139,8 +150,39 @@ static void Get_VS_Data(uint8_t* Buffer,uint32_t size)
 			the_car.vs->state |= 0x80;
 			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
 			vs_data_rx_cnt++;
+<<<<<<< HEAD
 			break;				
 		}
+=======
+			turn_cnt = 0;
+			break;				
+		}
+		else if(strcmp(str,"$LEFT") == 0)
+		{
+			turn_cnt++;
+			if(turn_cnt>=5)
+			{
+				the_car.vs->state |= 0x40;
+				turn_cnt = 0;
+			}
+			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
+			vs_data_rx_cnt++;
+			break;			
+		}
+		else if(strcmp(str,"$RIGH") == 0)
+		{
+			
+			turn_cnt++;
+			if(turn_cnt>=5)
+			{
+				the_car.vs->state |= 0x20;
+				turn_cnt = 0;
+			}
+			the_car.vs->pos_err = (Buffer[i+5]-'0')*1000 + (Buffer[i+6]-'0')*100 + (Buffer[i+7]-'0')*10 + (Buffer[i+8]-'0') - the_car.vs->pos_err_offset;
+			vs_data_rx_cnt++;
+			break;			
+		}		
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 	}
 
 

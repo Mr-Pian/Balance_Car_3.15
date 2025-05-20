@@ -31,4 +31,8 @@ ds_blancedcar_f407/control.o: ..\Application\control.c \
   ..\Drivers\SYSTEM\delay\delay.h ..\Application\pid.h ..\Core\Inc\tim.h \
   ..\Drivers\BSP_HardWare\tb6612.h ..\Core\Inc\usart.h \
   ..\Application\filter.h ..\user\Angle\angle.h \
+<<<<<<< HEAD
   ..\user\Math_DSP\HANA_math.h
+=======
+  ..\user\Math_DSP\HANA_math.h ..\Drivers\BSP_HardWare\ws2812.h
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8

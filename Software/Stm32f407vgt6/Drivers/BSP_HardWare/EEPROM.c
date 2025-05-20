@@ -381,5 +381,9 @@ void E2P_Read_allParam(void)
 		the_car.vs->pos_err_offset = E2P_ReadLenByte(EEPROM_ADDRESS_BASE+0x04*15, 4);
 		the_car.run_speed = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*16).value;
 		the_car.run_speed_K = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*17).value;
+<<<<<<< HEAD
+=======
+		the_car.target_distance = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*21).value;
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 		
 }

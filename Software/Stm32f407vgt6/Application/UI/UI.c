@@ -154,9 +154,27 @@ void run_func(void)
 		TFT_Printf(0,24*6+1,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"Pos_ERR:%d ",the_car.vs->pos_err);		
 		TFT_Printf(0,24*7+1,COLOR_WHITE,COLOR_BLACK,fsize_12X24,"Pos_FPS:%d ",the_car.vs->fps);		
 		TFT_Printf(0,24*8+1,COLOR_RED,COLOR_BLACK,fsize_12X24,"RUN:%.3f ",the_car.run_distance);
+<<<<<<< HEAD
 
 		if(the_car.KEY->BACK == 1 || BL_CMD & 0x0400 || fabs(the_car.Imu->roll)>=50.0f)//按键退出或者蓝牙关闭
 		{
+=======
+		if(the_car.run_distance >= the_car.target_distance)//运行到指定距离
+		{
+				the_car.the_pid->pid_stand_angle->enable = 0;
+				the_car.the_pid->pid_stand_angle_speed->enable = 0;
+				the_car.the_pid->pid_target_speed->enable = 0;
+				the_car.the_pid->pid_turn_gyro->enable = 0;
+				the_car.the_pid->pid_turn_angle->enable = 0;
+				the_car.the_pid->pid_turn_position->enable = 0;   
+				the_car.start_yaw = 0;																																																																										
+				Motor_Stop(2);
+				BL_CMD = 0;
+				return;			
+		}
+		else if(the_car.KEY->BACK == 1 || BL_CMD & 0x0400 || fabs(the_car.Imu->roll)>=50.0f)//按键退出或者蓝牙关闭
+		{
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 			delay_ms(500);
 			if(the_car.KEY->BACK == 1 || BL_CMD & 0x0400 || fabs(the_car.Imu->roll)>=50.0f)
 			{
@@ -205,6 +223,10 @@ void param_func()
 			{"VS_OFFSET:",NULL,(uint32_t*)&the_car.vs->pos_err_offset,EEPROM_ADDRESS_BASE+4*15},	
 			{"RUN_SPEED:",&the_car.run_speed,NULL,EEPROM_ADDRESS_BASE+4*16},
 			{"RUN_SPEED_K:",&the_car.run_speed_K,NULL,EEPROM_ADDRESS_BASE+4*17},
+<<<<<<< HEAD
+=======
+			{"set_DIS:",&the_car.target_distance,NULL,EEPROM_ADDRESS_BASE+4*21},
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 
 			{".."}								//结尾标志,方便自动计算数量
 		};

@@ -49,6 +49,10 @@ typedef struct
 	int32_t pos_err_offset;
 	uint8_t state;
 	uint32_t fps;
+<<<<<<< HEAD
+=======
+	float turn_yaw;
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 }VS_TypeDef;//视觉
 
 typedef struct
@@ -93,6 +97,10 @@ typedef struct
 	float run_speed;//运行速度
 	float run_speed_K;//运行速度动态调整
 	float run_distance;//运行距离
+<<<<<<< HEAD
+=======
+	float target_distance;//预期运行距离
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 	float start_yaw;//初始偏航角
 }car_typedef;
 

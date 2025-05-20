@@ -3,7 +3,11 @@
 #include "filter.h"
 #include "angle.h"
 #include "math.h"
+<<<<<<< HEAD
 
+=======
+#include "ws2812.h"
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 uint32_t BL_CMD=0;//蓝牙指令
 
 PID_TypeDef pid_speed_L;
@@ -163,13 +167,56 @@ void Turn_Gyro_PID_Control()
 	the_car.the_pid->pid_turn_gyro->f_cal_pid(&pid_turn_gyro, the_car.Imu->gyro_z);
 }
 /*转向位置控制*/
+uint8_t turn_state=0;
 void Turn_Position_PID_Control()
 {
 	//the_car.the_pid->pid_turn_angle->target = the_car.start_yaw;
 	//the_car.the_pid->pid_turn_angle->target += the_car.the_pid->pid_turn_position->f_cal_pid(&pid_turn_position,the_car.vs->pos_err);
+<<<<<<< HEAD
 	
 	the_car.the_pid->pid_turn_gyro->target = the_car.the_pid->pid_turn_position->f_cal_pid(&pid_turn_position,the_car.vs->pos_err);
 
+=======
+	if((the_car.vs->state & 0x40) && turn_state== 0)
+	{	
+		the_car.vs->turn_yaw = the_car.Imu->yaw;
+		turn_state = 1;
+
+	}
+	else if((the_car.vs->state & 0x20) && turn_state== 0)
+	{
+		the_car.vs->turn_yaw = the_car.Imu->yaw;
+		turn_state = 2;
+		
+	}
+	else if(the_car.Imu->yaw >= (the_car.vs->turn_yaw+80.0f) && turn_state == 1)//向左转足够角度
+	{
+		the_car.vs->turn_yaw = 0;
+		turn_state = 0;
+	}
+	else if(the_car.Imu->yaw <= (the_car.vs->turn_yaw-120.0f) && turn_state == 2)//向右转足够角度
+	{
+		the_car.vs->turn_yaw = 0;
+		turn_state = 0;
+	}	
+	
+	
+	if(turn_state==1)//左急弯，向左转
+	{
+		the_car.the_pid->pid_turn_gyro->target = 300.0f;
+		WS2812_LED_Set(0,0,255,0);//亮绿灯
+	}
+	else if(turn_state==2)//右急弯，向右转
+	{
+		the_car.the_pid->pid_turn_gyro->target = -300.0f;
+		WS2812_LED_Set(0,0,0,255);//亮蓝灯
+	}	
+	else//正常情况按照视觉偏差进行偏航
+	{
+		WS2812_LED_Set(0,255,0,0);//亮红灯
+		the_car.the_pid->pid_turn_gyro->target = the_car.the_pid->pid_turn_position->f_cal_pid(&pid_turn_position,the_car.vs->pos_err);
+	}
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 }
 
 /**
@@ -204,9 +251,17 @@ void Target_Speed_CLoop_PID_Control(car_typedef* hcar)
 //	{
 //		hcar->the_pid->pid_target_speed->target =0.0f;
 //	}
+<<<<<<< HEAD
 	if(hcar->vs->state & 0x80)
 		hcar->the_pid->pid_target_speed->target = 0.0f;
 	
+=======
+	if(hcar->vs->state & 0x80 || turn_state)
+	{
+		WS2812_LED_Set(0,0,0,0);//灭灯
+		hcar->the_pid->pid_target_speed->target = 0.0f;
+	}
+>>>>>>> bf6da18f5bf0d5d256e4bf9a684c9687fa1032d8
 	hcar->the_pid->pid_target_speed->f_cal_pid(&pid_target_speed, mean_speed);
 //	/***串级输出给角度环控制***/
 //	hcar->the_pid->pid_stand_angle->target = hcar->the_pid->pid_target_speed->output;

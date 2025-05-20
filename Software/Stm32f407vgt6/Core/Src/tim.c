@@ -78,7 +78,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 		if(tim2_500ms_cnt>=50)
 		{
-			WS2812_LED_Set(0,HAL_RNG_GetRandomNumber(&hrng)>>28,HAL_RNG_GetRandomNumber(&hrng)>>28,HAL_RNG_GetRandomNumber(&hrng)>>28);
+			//WS2812_LED_Set(0,HAL_RNG_GetRandomNumber(&hrng)>>28,HAL_RNG_GetRandomNumber(&hrng)>>28,HAL_RNG_GetRandomNumber(&hrng)>>28);
 			tim2_500ms_cnt=0;
 		}
 		if(tim2_1000ms_cnt >= 100)
