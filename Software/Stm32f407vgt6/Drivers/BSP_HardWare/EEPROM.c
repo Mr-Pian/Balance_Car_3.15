@@ -372,10 +372,14 @@ void E2P_Read_allParam(void)
 		the_car.the_pid->pid_turn_position->kp = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*9).value;
 		the_car.the_pid->pid_turn_position->ki = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*10).value;
 		the_car.the_pid->pid_turn_position->kd = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*11).value;
+		the_car.the_pid->pid_turn_angle->kp = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*18).value;
+		the_car.the_pid->pid_turn_angle->ki = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*19).value;
+		the_car.the_pid->pid_turn_angle->kd = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*20).value;
 		the_car.the_pid->pid_turn_gyro->kp = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*12).value;
 		the_car.the_pid->pid_turn_gyro->ki = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*13).value;
 		the_car.the_pid->pid_turn_gyro->kd = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*14).value;	
 		the_car.vs->pos_err_offset = E2P_ReadLenByte(EEPROM_ADDRESS_BASE+0x04*15, 4);
 		the_car.run_speed = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*16).value;
+		the_car.run_speed_K = E2P_ReadFloatNum(EEPROM_ADDRESS_BASE+0x04*17).value;
 		
 }

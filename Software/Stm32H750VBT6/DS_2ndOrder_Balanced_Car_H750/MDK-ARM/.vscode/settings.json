@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "key.h": "c",
+        "main.h": "c",
+        "control.h": "c",
+        "ui.h": "c",
+        "gpio.h": "c",
+        "ws2812.h": "c",
+        "logo.h": "c"
+    }
+}

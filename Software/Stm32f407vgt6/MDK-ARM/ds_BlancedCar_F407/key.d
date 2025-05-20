@@ -1,45 +1,32 @@
-ds_blancedcar_f407\key.o: ..\Drivers\BSP_HardWare\key.c
-ds_blancedcar_f407\key.o: ../Core/Inc/main.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
-ds_blancedcar_f407\key.o: ../Core/Inc/stm32f4xx_hal_conf.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Include/core_cm4.h
-ds_blancedcar_f407\key.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdint.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Include/cmsis_version.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Include/mpu_armv7.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-ds_blancedcar_f407\key.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stddef.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_exti.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_dma_ex.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rng.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h
-ds_blancedcar_f407\key.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h
-ds_blancedcar_f407\key.o: ../Drivers/SYSTEM/delay/delay.h
-ds_blancedcar_f407\key.o: ../Drivers/CMSIS/Include/core_cm4.h
-ds_blancedcar_f407\key.o: ../Application/control.h
-ds_blancedcar_f407\key.o: ../Application/pid.h
-ds_blancedcar_f407\key.o: ../Core/Inc/tim.h
-ds_blancedcar_f407\key.o: ..\Drivers\BSP_HardWare\key.h
-ds_blancedcar_f407\key.o: ../Core/Inc/gpio.h
-ds_blancedcar_f407\key.o: D:\Keil5\ARM\ARMCC\Bin\..\include\stdio.h
+ds_blancedcar_f407/key.o: ..\Drivers\BSP_HardWare\key.c \
+  ..\Core\Inc\main.h ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal.h \
+  ..\Core\Inc\stm32f4xx_hal_conf.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_def.h \
+  ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f4xx.h \
+  ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\stm32f407xx.h \
+  ..\Drivers\CMSIS\Include\core_cm4.h \
+  ..\Drivers\CMSIS\Device\ST\STM32F4xx\Include\system_stm32f4xx.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rcc_ex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_gpio_ex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_exti.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_dma.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_dma_ex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_cortex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash_ex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_flash_ramfunc.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_i2c.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_i2c_ex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_pwr_ex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_rng.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_spi.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_tim_ex.h \
+  ..\Drivers\STM32F4xx_HAL_Driver\Inc\stm32f4xx_hal_uart.h \
+  ..\Drivers\SYSTEM\delay\delay.h ..\Application\control.h \
+  ..\Application\pid.h ..\Core\Inc\tim.h ..\Drivers\BSP_HardWare\key.h \
+  ..\Core\Inc\gpio.h

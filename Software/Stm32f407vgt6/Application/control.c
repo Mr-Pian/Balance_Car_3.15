@@ -2,12 +2,14 @@
 #include "tb6612.h"
 #include "filter.h"
 #include "angle.h"
+#include "math.h"
 
 uint32_t BL_CMD=0;//蓝牙指令
 
 PID_TypeDef pid_speed_L;
 PID_TypeDef pid_speed_R;
 PID_TypeDef pid_turn_gyro;
+PID_TypeDef pid_turn_angle;
 PID_TypeDef pid_turn_position;
 PID_TypeDef pid_stand_angle;
 PID_TypeDef pid_stand_angle_speed;
@@ -54,7 +56,7 @@ void Get_Motor_Speed(car_typedef* hcar)
 	//计算真实速度
 	hcar->Motor_L->real_speed =hcar->Motor_L->real_speed*0.14f + 0.86f*counter_a*COUNT_SPEED_K;
 	hcar->Motor_R->real_speed =hcar->Motor_R->real_speed*0.14f + 0.86f* counter_b*COUNT_SPEED_K;
-	
+	hcar->run_distance += (hcar->Motor_L->real_speed + hcar->Motor_R->real_speed)*0.5f*0.001f;
 	//计数器清零
 	__HAL_TIM_SET_COUNTER(&htim3, 0);
 	__HAL_TIM_SET_COUNTER(&htim4, 0);
@@ -138,32 +140,36 @@ void Stand_Angle_CLoop_PID_Control(car_typedef* hcar)
   **/
 void Stand_Angle_Speed_CLoop_PID_Control(car_typedef* hcar)
 {
-	hcar->the_pid->pid_stand_angle_speed->f_cal_pid(&pid_stand_angle_speed, hcar->Imu->gyro_x*Gyro_Gain);
+	hcar->the_pid->pid_stand_angle_speed->f_cal_pid(&pid_stand_angle_speed, hcar->Imu->gyro_x);
 }
 
 /*转向角速度控制*/
 void Turn_Gyro_PID_Control()
 {
-	if(BL_CMD & 0x1000)
-	{
-		the_car.the_pid->pid_turn_gyro->target +=10.0f;
-		BL_CMD &= ~(0x1000);
-	}
-	else if(BL_CMD & 0x0800)
-	{
-		the_car.the_pid->pid_turn_gyro->target -=10.0f;
-		BL_CMD &= ~(0x0800);		
-	}
-	else if(BL_CMD==0)
-	{
-		the_car.the_pid->pid_turn_gyro->target =0.0f;
-	}
-	the_car.the_pid->pid_turn_gyro->f_cal_pid(&pid_turn_gyro, the_car.Imu->gyro_z*Gyro_Gain);
+//	if(BL_CMD & 0x1000)
+//	{
+//		the_car.the_pid->pid_turn_gyro->target +=10.0f;
+//		BL_CMD &= ~(0x1000);
+//	}
+//	else if(BL_CMD & 0x0800)
+//	{
+//		the_car.the_pid->pid_turn_gyro->target -=10.0f;
+//		BL_CMD &= ~(0x0800);		
+//	}
+//	else if(BL_CMD==0)
+//	{
+//		the_car.the_pid->pid_turn_gyro->target =0.0f;
+//	}
+	the_car.the_pid->pid_turn_gyro->f_cal_pid(&pid_turn_gyro, the_car.Imu->gyro_z);
 }
 /*转向位置控制*/
 void Turn_Position_PID_Control()
 {
+	//the_car.the_pid->pid_turn_angle->target = the_car.start_yaw;
+	//the_car.the_pid->pid_turn_angle->target += the_car.the_pid->pid_turn_position->f_cal_pid(&pid_turn_position,the_car.vs->pos_err);
+	
 	the_car.the_pid->pid_turn_gyro->target = the_car.the_pid->pid_turn_position->f_cal_pid(&pid_turn_position,the_car.vs->pos_err);
+
 }
 
 /**
@@ -180,22 +186,27 @@ void Turn_Position_PID_Control()
 void Target_Speed_CLoop_PID_Control(car_typedef* hcar)
 {
 	float mean_speed  = (hcar->Motor_L->real_speed + hcar->Motor_R->real_speed)*0.5f;
-	hcar->the_pid->pid_target_speed->target = hcar->run_speed;//设定运行速度
+	hcar->the_pid->pid_target_speed->target = hcar->run_speed *(1.0f-fabs((float)hcar->vs->pos_err)*hcar->run_speed_K);//设定运行速度
+
+//	if(hcar->the_pid->pid_target_speed->target < 0.0f)
+//		hcar->the_pid->pid_target_speed->target = 0.0f;//避免倒车      
 	if(BL_CMD & 0x4000)
 	{
-		hcar->the_pid->pid_target_speed->target +=0.1f;
+		hcar->the_pid->pid_target_speed->target +=0.05f;
 		BL_CMD &= ~(0x4000);
 	}
 	else if(BL_CMD & 0x2000)
 	{
-		hcar->the_pid->pid_target_speed->target -=0.1f;
+		hcar->the_pid->pid_target_speed->target -=0.05f;
 		BL_CMD &= ~(0x2000);		
 	}
-	else if(BL_CMD==0)
-	{
-		hcar->the_pid->pid_target_speed->target =0.0f;
-	}
-
+//	else if(BL_CMD==0)
+//	{
+//		hcar->the_pid->pid_target_speed->target =0.0f;
+//	}
+	if(hcar->vs->state & 0x80)
+		hcar->the_pid->pid_target_speed->target = 0.0f;
+	
 	hcar->the_pid->pid_target_speed->f_cal_pid(&pid_target_speed, mean_speed);
 //	/***串级输出给角度环控制***/
 //	hcar->the_pid->pid_stand_angle->target = hcar->the_pid->pid_target_speed->output;
@@ -229,6 +240,7 @@ void Control_Init(car_typedef* hcar)
 	hcar->the_pid->pid_stand_angle_speed = &pid_stand_angle_speed;
 	hcar->the_pid->pid_target_speed = &pid_target_speed;
 	hcar->the_pid->pid_turn_position = &pid_turn_position;
+	hcar->the_pid->pid_turn_angle = &pid_turn_angle;
 	hcar->the_pid->pid_turn_gyro = &pid_turn_gyro;
 //	pid_init(the_car.the_pid->pid_speed_L);
 //	the_car.the_pid->pid_speed_L->f_param_init(the_car.the_pid->pid_speed_L,PID_Speed,MAX_MOTOR_DUTY,MAX_MOTOR_DUTY,0,1,0.0,10000.0f,100.0f,0.0f);
@@ -241,7 +253,7 @@ void Control_Init(car_typedef* hcar)
 
 	/***直立环***/
 	pid_init(the_car.the_pid->pid_stand_angle);
-	the_car.the_pid->pid_stand_angle->f_param_init(the_car.the_pid->pid_stand_angle,PID_Position,MAX_CONTROL_ANGLE,0,0,0,0.0f, 2.5f,0.2f,0.0f);  
+	the_car.the_pid->pid_stand_angle->f_param_init(the_car.the_pid->pid_stand_angle,PID_Position,MAX_STAND_GYRO,0,0,0,0.0f, 2.5f,0.0f,0.0f);  
 	pid_init(the_car.the_pid->pid_stand_angle_speed);
 	the_car.the_pid->pid_stand_angle_speed->f_param_init(the_car.the_pid->pid_stand_angle_speed,PID_Position,MAX_MOTOR_DUTY,0,0,0,0.0,180.0f,0.0f,100.0f);
 	
@@ -251,8 +263,12 @@ void Control_Init(car_typedef* hcar)
 
 	/***转向环***/
 	pid_init(the_car.the_pid->pid_turn_gyro);	
-	the_car.the_pid->pid_turn_gyro->f_param_init(the_car.the_pid->pid_turn_gyro,PID_Position,MAX_MOTOR_DUTY,0,0,0,0.0f,0.0f,0.0f,0.0f);
+	the_car.the_pid->pid_turn_gyro->f_param_init(the_car.the_pid->pid_turn_gyro,PID_Position,MAX_MOTOR_DUTY,0,0,0,0.0f,7.0f,0.0f,0.0f);
+	pid_init(the_car.the_pid->pid_turn_angle);	
+	the_car.the_pid->pid_turn_angle->f_param_init(the_car.the_pid->pid_turn_angle,PID_Position,MAX_TURN_GYRO,0,0,0,0.0f,0.0f,0.0f,0.0f);
 	pid_init(the_car.the_pid->pid_turn_position);	
-	the_car.the_pid->pid_turn_position->f_param_init(the_car.the_pid->pid_turn_position,PID_Position,MAX_TURN_GYRO,0,0,0,0.0f,0.0f,0.0f,0.0f);
+	the_car.the_pid->pid_turn_position->f_param_init(the_car.the_pid->pid_turn_position,PID_Position,9999,0,0,0,0.0f,29.0f,0.0f,8.7f);
+
+
 
 }

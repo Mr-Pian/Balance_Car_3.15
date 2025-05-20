@@ -19,8 +19,8 @@
 #endif
 /********************************************************************************/
 
-#define MAX_CONTROL_ANGLE 25.0f //姿态角度最大控制量
-#define MAX_TURN_GYRO 50.0f     //转向最大角速度
+#define MAX_STAND_GYRO 400.0f //直立最大角速度
+#define MAX_TURN_GYRO 1000.0f     //转向最大角速度
 
 typedef enum  //编码器状态枚举
 {
@@ -33,13 +33,13 @@ typedef struct
 	float roll;
 	float pitch;
 	float yaw;
-	int16_t gyro_x;
-	int16_t gyro_y;
-	int16_t gyro_z;
-	int16_t acc_x;
-	int16_t acc_y;
-	int16_t acc_z;
-	int16_t temp;
+	float gyro_x;
+	float gyro_y;
+	float gyro_z;
+	float acc_x;
+	float acc_y;
+	float acc_z;
+	float temp;
 	uint8_t is_ok;//IMU数据正常标志
 }imu_typedef;
 
@@ -47,7 +47,8 @@ typedef struct
 {
 	int32_t pos_err;
 	int32_t pos_err_offset;
-	
+	uint8_t state;
+	uint32_t fps;
 }VS_TypeDef;//视觉
 
 typedef struct
@@ -73,6 +74,7 @@ typedef struct
 	PID_TypeDef* pid_speed_L;  //左轮速度闭环
 	PID_TypeDef* pid_speed_R;  //右轮速度闭环
 	PID_TypeDef* pid_turn_position;  //转向环位置外环
+	PID_TypeDef* pid_turn_angle;  //转向环角度外环
 	PID_TypeDef* pid_turn_gyro;  //转向环角速度内环
 	PID_TypeDef* pid_stand_angle;  //直立环角度外环
 	PID_TypeDef* pid_stand_angle_speed;  //直立环角速度内环
@@ -89,6 +91,9 @@ typedef struct
 	key_typedef* KEY;	//按键
 	PID_pack_typedef* the_pid;  //所有pid
 	float run_speed;//运行速度
+	float run_speed_K;//运行速度动态调整
+	float run_distance;//运行距离
+	float start_yaw;//初始偏航角
 }car_typedef;
 
 void Get_Motor_Speed(car_typedef* hcar);

@@ -28,11 +28,14 @@
 #include "key.h"
 #include "ws2812.h"
 #include "rng.h"
+#include "uart_unpack.h"
 /* USER CODE END Include */
 uint32_t tim1_2ms_cnt=0;
 uint32_t tim1_10ms_cnt=0;
+uint32_t tim1_20ms_cnt=0;
 uint32_t tim2_10ms_cnt=0;
 uint32_t tim2_500ms_cnt=0;
+uint32_t tim2_1000ms_cnt=0;
 /***************************************定时器中断回调函数****************************************/
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -50,14 +53,18 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 		if (tim1_10ms_cnt >= 10)  //100hz时基
 		{
-
-			Stand_Angle_CLoop_PID_Control(&the_car);//小车姿态角度控制		
 			Turn_Position_PID_Control();//小车转向位置控制
+			Stand_Angle_CLoop_PID_Control(&the_car);//小车姿态角度控制		
 			tim1_10ms_cnt = 0;
 		}
-
+		if(tim1_20ms_cnt >=20)	//50Hz时基
+		{     
+			
+			tim1_20ms_cnt = 0;
+		}
 		tim1_2ms_cnt++;
 		tim1_10ms_cnt++;
+		tim1_20ms_cnt++;
 	}
 	
 	if (htim == &htim14)  //(不准确)5ms时基
@@ -74,9 +81,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			WS2812_LED_Set(0,HAL_RNG_GetRandomNumber(&hrng)>>28,HAL_RNG_GetRandomNumber(&hrng)>>28,HAL_RNG_GetRandomNumber(&hrng)>>28);
 			tim2_500ms_cnt=0;
 		}
+		if(tim2_1000ms_cnt >= 100)
+		{
+			the_car.vs->fps = vs_data_rx_cnt;
+			vs_data_rx_cnt = 0;
+			tim2_1000ms_cnt = 0;
+		}
 		tim2_10ms_cnt++;
 		tim2_500ms_cnt++;
-		//uart_printf(&huart1, "%f, %f, %f, %d, %d, %d, %d, %d, %d, %d\n", the_car.Imu->pitch, the_car.Imu->roll, the_car.Imu->yaw, the_car.Imu->gyro_x, the_car.Imu->gyro_y, the_car.Imu->gyro_z,the_car.Imu->acc_x, the_car.Imu->acc_y, the_car.Imu->acc_z, the_car.Imu->temp);
+		tim2_1000ms_cnt++;
+		uart_printf(&huart1, "%f,%f,%f,%f,%f,%f\n", the_car.Imu->pitch, the_car.Imu->roll, the_car.Imu->yaw, the_car.Imu->gyro_x, the_car.Imu->gyro_y, the_car.Imu->gyro_z );
 	
 	}
 }
